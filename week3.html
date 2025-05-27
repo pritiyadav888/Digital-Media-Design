@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3: JavaScript & Interactivity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Chosen Palette: Coolors.co (0d1321-1d2d44-3e5c76-748cab-f0ebd8) */
+        /* Application Structure Plan: Multi-page application with index.html as the entry point.
+           Overall: A multi-page application with a consistent top navigation bar for "Weeks." Each "Week" page will have its own internal structure (sidebar for main topics, main content area with accordions for sub-topics).
+           Rationale: This structure provides a clear progression through the course material ("Week 1" to "Week 3"). The top navigation offers quick switching between weeks (easy exploration). Within each week, the sidebar navigation allows users to jump to major topics, and accordions manage information density, preventing overwhelming scrolls and promoting focused learning (user understanding). This balances broad navigation with detailed content exploration. */
+        /* Visualization & Content Choices:
+           Week 1: Focus on foundational text explanations for HTML/CSS, semantic elements, selectors, and layout concepts. Code examples will be crucial.
+           Week 2: Covers more specific HTML elements (text, lists, tables, forms, media), web mechanics, and big concepts.
+           Week 3: Focuses on JavaScript basics, DOM, and web interactivity.
+           Justification: Text is best for explanations; code blocks for syntax; interactive elements for active recall and engagement.
+           Library/Method: Vanilla JS for interactions, Tailwind for styling. */
+        /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+
+        body {
+            background: linear-gradient(to bottom right, #f0ebd8, #748cab); /* Light cream to light blue/gray gradient */
+            font-family: sans-serif;
+            min-height: 100vh; /* Ensure gradient covers full viewport height */
+            display: flex;
+            flex-direction: column;
+            color: #0d1321; /* Darkest color for main text */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .accordion-header::after {
+            content: '\25BC'; /* Down arrow */
+            float: right;
+            transition: transform 0.3s ease;
+        }
+        .accordion-header.active::after {
+            transform: rotate(180deg); /* Up arrow */
+        }
+        .nav-link {
+            color: #f0ebd8; /* Light cream for better visibility on dark sidebar */
+        }
+        .nav-link.active {
+            background-color: #3e5c76; /* Medium blue/gray from palette */
+            color: white;
+        }
+        .nav-link:hover {
+            background-color: #3e5c76; /* Medium blue/gray for hover */
+            color: white;
+        }
+        .content-section {
+            display: none; /* Hidden by default */
+        }
+        .content-section.active {
+            display: block; /* Shown when active */
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #ebebe0; /* Off-shade of f0ebd8 */
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            overflow-x: auto; /* For horizontal scrolling if code is too long */
+        }
+        code {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header class="bg-[#0d1321] text-white p-6 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Digital Media Design: Web Fundamentals</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="index.html" class="text-white hover:text-[#748cab] font-semibold">Home</a></li>
+                    <li><a href="week1.html" class="text-white hover:text-[#748cab] font-semibold">Week 1</a></li>
+                    <li><a href="week2.html" class="text-white hover:text-[#748cab] font-semibold">Week 2</a></li>
+                    <li><a href="week3.html" class="text-white hover:text-[#748cab] font-semibold nav-link active">Week 3</a></li>
+                    <li>
+                        <a href="week4.html" class="text-white hover:text-[#748cab] font-semibold"
+                          >Week 4</a
+                        >
+                      </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row container mx-auto mt-8 p-4 md:p-0">
+        <aside id="sidebar" class="w-full md:w-1/4 bg-[#1d2d44] p-6 rounded-lg shadow-md md:mr-8 mb-8 md:mb-0 md:sticky md:top-8 self-start">
+            <h2 class="text-xl font-semibold text-[#f0ebd8] mb-4">Week 3 Topics</h2>
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#why-js" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Why JavaScript?</a></li>
+                    <li><a href="#js-basics" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">JavaScript Basics</a></li>
+                    <li><a href="#statements" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Statements</a></li>
+                    <li><a href="#comments" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Comments</a></li>
+                    <li><a href="#variables" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Variables</a></li>
+                    <li><a href="#data-types" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Data Types</a></li>
+                    <li><a href="#operators" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Operators</a></li>
+                    <li><a href="#if-else" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">If/Else Statements</a></li>
+                    <li><a href="#for-loops" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">For Loops</a></li>
+                    <li><a href="#events" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Events</a></li>
+                    <li><a href="#browser-object" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Browser Object</a></li>
+                    <li><a href="#dom" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">DOM</a></li>
+                    <li><a href="#polyfills" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Polyfills</a></li>
+                    <li><a href="#js-libraries" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">JS Libraries</a></li>
+                    <li><a href="#key-code" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Key Code Examples</a></li>
+                    <li><a href="#activity" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Activity Overview</a></li>
+                    <li><a href="#qna" class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200">Q&A</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="main-content" class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-md">
+            <section id="week3-intro" class="content-section active mb-12">
+                 <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Week 3: JavaScript & Web Interactivity</h2>
+                 <p class="text-slate-700 leading-relaxed mb-4">Welcome to Week 3! This module is all about JavaScript, the programming language that brings your web pages to life. You'll learn how to make your sites interactive, dynamic, and responsive to user actions. We'll cover everything from basic JavaScript concepts to manipulating the Document Object Model (DOM) and preparing your projects for the web.</p>
+                 <p class="text-slate-700 leading-relaxed">By the end of this week, you'll understand how to add behavior to your HTML and CSS, transforming static content into engaging web experiences.</p>
+            </section>
+
+            <section id="why-js" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Why JavaScript?</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">JavaScript is the "brain and reflexes" of your webpage. While HTML provides the structure (skeleton) and CSS adds the style (skin), JavaScript allows your page to be interactive and dynamic. It makes things happen!</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">HTML vs JavaScript</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p>HTML can only display content. You write `&lt;p&gt;Hello&lt;/p&gt;`, and it's there. But it cannot change once the page is loaded.</p>
+                        <p class="mt-2">Want something to change based on the user's action (e.g., click a button and change text)? HTML can’t do that.</p>
+                        <p class="mt-2">That's why we use JavaScript — it adds behavior.</p>
+                        <p class="mt-2 font-semibold">Example (HTML only):</p>
+                        <pre><code class="language-html">&lt;button&gt;Hello&lt;/button&gt;
+&lt;p&gt;This is always here.&lt;/p&gt;</code></pre>
+                        <p class="mt-2 font-semibold">Example (With JavaScript):</p>
+                        <pre><code class="language-html">&lt;button onclick="sayHello()"&gt;Click Me&lt;/button&gt;
+&lt;p id="message"&gt;&lt;/p&gt;
+&lt;script&gt;
+  function sayHello() {
+    document.getElementById("message").innerText = "Hello, Web Wizard!";
+  }
+&lt;/script&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="js-basics" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">JavaScript Basics</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">Let's break down some fundamental JavaScript concepts using real-life analogies to make them easier to grasp.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Core Concepts</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p><strong>`let name = "Priti";` → Think of a labelled jar with your name in it.</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>`let`: Keyword to declare a variable (a container for a value).</li>
+                            <li>`name`: The name of the variable (the label on the jar).</li>
+                            <li>`=`: Assignment operator (puts the value on the right into the variable on the left).</li>
+                            <li>`"Priti"`: The value being stored (content inside the jar), a string of text.</li>
+                        </ul>
+                        <p class="mt-2"><strong>`function` → Like a recipe. It runs when you tell it to.</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>`function`: Keyword to define a block of reusable code.</li>
+                            <li>The name after `function` (e.g., `greetUser`): The name of the recipe.</li>
+                            <li>Parentheses `()`: Can contain parameters (ingredients).</li>
+                            <li>Curly braces `{}`: Enclose the function body (the steps in the recipe).</li>
+                        </ul>
+                        <p class="mt-2"><strong>`event` → Like ringing a doorbell — you decide what happens next!</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>An action that occurs in the browser (e.g., click, mouseover).</li>
+                            <li>`onclick`: An event listener, waiting for a 'click' event.</li>
+                            <li>When the event happens, the associated JavaScript code runs.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Code Demo 1: Say Hello</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <pre><code class="language-html">&lt;button onclick="greetUser()"&gt;Say Hello&lt;/button&gt;
+&lt;p id="greeting"&gt;&lt;/p&gt;
+&lt;script&gt;
+  function greetUser() {
+    document.getElementById("greeting").innerText = "Hello, lovely human!";
+  }
+&lt;/script&gt;</code></pre>
+                        <p class="mt-2">When you click the "Say Hello" button, the browser finds the paragraph with the ID "greeting" and changes the text inside it. This is the power of JavaScript – it adds *behavior* and *interactivity*.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="statements" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Statements</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">A **statement** is a single instruction you give to the browser. It's a command that tells the browser what to do.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Structure and Semicolons</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <pre><code class="language-javascript">alert("Thank you."); // This tells the browser to pop up a box.</code></pre>
+                        <p class="mt-2">The **semicolon (`;`)** at the end of the statement tells JavaScript that it's the end of the command, just as a period ends a sentence. While JavaScript can sometimes infer the end of a statement with a line break, it's best practice to always end each statement with a semicolon for clarity and to prevent potential issues.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="comments" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Comments</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">**Comments** are notes you leave in your code that are completely ignored by the browser. They are for humans to understand the code, especially helpful if someone else (or your future self!) needs to read or edit it.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Types of Comments</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li><strong>Single-line comments:</strong> Use two slash characters (`//`) at the beginning of the line. Everything after `//` on that line is a comment.</li>
+                            <li><strong>Multi-line comments:</strong> Use `/*` to start the comment and `*/` to end it. Everything between these characters is ignored, even across multiple lines.</li>
+                        </ul>
+                        <pre><code class="language-javascript">// This is a single-line comment.
+alert("Hello!"); // This comment explains what the line does.
+
+/*
+This is a multiline comment.
+Anything between these characters
+will be completely ignored.
+*/</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="variables" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Variables</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">A **variable** is like a labelled box where you store information. You give it a name and assign it a value (which can be a number, text, a webpage element, or even a function). You can then refer to that value by its name and even change it later.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Declaring and Naming Variables</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p>To create a variable and assign a value:</p>
+                        <pre><code class="language-javascript">let myNumber = 5; // 'let' is the modern way to declare variables.</code></pre>
+                        <p class="mt-2">You can also declare a variable without an initial value:</p>
+                        <pre><code class="language-javascript">let myText; // This variable currently holds 'undefined'.</code></pre>
+                        <p class="mt-2"><strong>Variable Naming Rules:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Must start with a letter or an underscore (`_`).</li>
+                            <li>Can contain letters, digits, and underscores.</li>
+                            <li>May not contain spaces (use `my_variable` or `myVariable` - **camelCase**).</li>
+                            <li>May not contain special characters (e.g., `!`, `.`, `?`).</li>
+                            <li>JavaScript is **case-sensitive** (`myVariable` is different from `MyVariable`).</li>
+                        </ul>
+                        <p class="mt-2">Choose descriptive names (e.g., `productName` instead of `data`).</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="data-types" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Data Types</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">The values you assign to variables fall under different **data types**. Understanding these types helps you know how JavaScript will treat your data.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Common Data Types</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li><strong>`Undefined`</strong>: A variable declared but not yet assigned a value.
+                                <pre><code class="language-javascript">let foo;
+alert(foo); // Shows "undefined"</code></pre>
+                            </li>
+                            <li><strong>`Null`</strong>: Represents the intentional absence of any object value.
+                                <pre><code class="language-javascript">let foo = null;
+alert(foo); // Shows "null"</code></pre>
+                            </li>
+                            <li><strong>`Number`</strong>: For numeric values (integers and decimals).
+                                <pre><code class="language-javascript">let foo = 5;
+alert(foo); // Shows "5"
+alert(foo + foo); // Shows "10" (mathematical addition)</code></pre>
+                            </li>
+                            <li><strong>`String`</strong>: For text. Enclosed in single (`'...'`) or double (`"..."`) quotes.
+                                <pre><code class="language-javascript">let foo = "five";
+alert(foo); // Shows "five"
+alert(foo + foo); // Shows "fivefive" (string concatenation)
+alert("5" + "5"); // Shows "55" (numbers treated as strings)</code></pre>
+                            </li>
+                            <li><strong>`Boolean`</strong>: Represents `true` or `false`. Used for logical conditions.
+                                <pre><code class="language-javascript">let isLogged = true; // 'isLogged' is now true</code></pre>
+                                <p class="mt-1">Values like `null`, `undefined`, `0`, and empty strings (`""`) are considered "falsy," while others are "truthy."</p>
+                            </li>
+                            <li><strong>`Array`</strong>: A collection of multiple values (called members) assigned to a single variable. Values are accessed by their **index** (position), starting from `0`. Enclosed in square brackets `[]`.
+                                <pre><code class="language-javascript">let colors = ["red", "green", "blue"];
+alert(colors[0]); // Shows "red"
+alert(colors[1]); // Shows "green"</code></pre>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="operators" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Operators</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">Operators perform operations on values and variables. They are essential for calculations and making comparisons.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Mathematical Operators</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>`+` (Addition)</li>
+                            <li>`-` (Subtraction)</li>
+                            <li>`*` (Multiplication)</li>
+                            <li>`/` (Division)</li>
+                            <li>`++` (Increment by 1, e.g., `x++`)</li>
+                            <li>`--` (Decrement by 1, e.g., `x--`)</li>
+                            <li>`+=` (Add and assign, e.g., `x += 5` is `x = x + 5`)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Comparison Operators</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p>These operators compare values and return a `Boolean` (`true` or `false`).</p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>`==` (Equal to - checks value, may convert types)</li>
+                            <li>`!=` (Not equal to)</li>
+                            <li>`===` (Identical to - checks value AND data type)</li>
+                            <li>`!==` (Not identical to)</li>
+                            <li>`>` (Greater than)</li>
+                            <li>`>=` (Greater than or equal to)</li>
+                            <li>`<` (Less than)</li>
+                            <li>`<=` (Less than or equal to)</li>
+                        </ul>
+                        <p class="mt-2 font-semibold">`==` vs `===` (Crucial Difference):</p>
+                        <pre><code class="language-javascript">alert(5 == "5");   // true (values are same, "5" is converted to number)
+alert(5 === "5");  // false (values are same, but types are different: Number vs String)
+alert(5 !== "5");  // true (types are different, so they are not identical)</code></pre>
+                        <p class="mt-2 text-sm text-red-700"><strong>Warning:</strong> Be careful not to accidentally use a single equals sign (`=`) when you mean to compare! `=` is for *assigning* a value.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="if-else" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">If/Else Statements</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">`if/else` statements are how JavaScript makes decisions. They execute different blocks of code based on whether a condition is `true` or `false`.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Structure and Examples</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p><strong>Basic Structure:</strong></p>
+                        <pre><code class="language-javascript">if (condition is true) {
+    // Do this code
+} else {
+    // Otherwise, do this code
+}</code></pre>
+                        <p class="mt-2"><strong>Example:</strong></p>
+                        <pre><code class="language-javascript">let score = 85;
+if (score >= 70) {
+    alert("You passed!");
+} else {
+    alert("You need to study more.");
+}</code></pre>
+                        <p class="mt-2">The code inside the `if` block runs if the condition is `true`. Otherwise, the code inside the `else` block runs.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="for-loops" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">For Loops</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">`for` loops are used to repeat a block of code a specific number of times, or for each item in a list (like an array).</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Structure and Examples</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p><strong>Basic Structure:</strong></p>
+                        <pre><code class="language-javascript">for (initialization; condition_to_continue; step_each_time) {
+    // Code to repeat
+}</code></pre>
+                        <p class="mt-2"><strong>Example (counting):</strong></p>
+                        <pre><code class="language-javascript">for (let i = 0; i < 3; i++) { // Starts i at 0, continues as long as i < 3, adds 1 to i each time
+    console.log("Count:", i); // Will print "Count: 0", "Count: 1", "Count: 2"
+}</code></pre>
+                        <p class="mt-2"><strong>Example (looping through an array):</strong></p>
+                        <pre><code class="language-javascript">let fruits = ["apple", "banana", "cherry"];
+for (let i = 0; i < fruits.length; i++) { // fruits.length gives the number of items in the array
+    console.log("Fruit:", fruits[i]); // Accesses item at current index 'i'
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="events" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Events</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">An **event** is something that happens in the web browser (e.g., a user click, mouse movement, key press, or page loading). JavaScript lets you "listen" for these events and run specific code in response.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Event Listeners</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p>The `onclick` attribute in HTML is a simple way to attach an event. More advanced methods involve JavaScript's `addEventListener`.</p>
+                        <pre><code class="language-html">&lt;button onclick="myFunction()"&gt;Click Me&lt;/button&gt;</code></pre>
+                        <p class="mt-2">This tells the browser: "WHEN this button is clicked (`onclick`), THEN run `myFunction()`."</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="browser-object" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">The Browser Object</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">The `window` object is like the main control panel for your web browser. It gives JavaScript access to everything related to the browser window and the webpage it's showing.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">`window` and `document`</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li><strong>`window`</strong>: Represents the browser window itself. It has properties (like `window.innerWidth` for width) and methods (like `window.open()` to open new tabs).</li>
+                            <li><strong>`document`</strong>: A key object within `window`. It represents the actual HTML webpage loaded. This is your primary way to interact with the HTML elements.</li>
+                        </ul>
+                        <pre><code class="language-javascript">console.log(window.innerWidth); // Get browser window width
+document.body.style.backgroundColor = "lightblue"; // Change page background</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="dom" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">DOM: The Document Object Model</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">The **DOM** is like a tree-like map of your HTML structure. Every HTML element (`<h1>`, `<p>`, `<div>`) is a "node" on this tree. JavaScript uses this map to find, change, add, or remove HTML elements and their styles.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">DOM Manipulation</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p>JavaScript uses the `document` object to interact with the DOM:</p>
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li><strong>Find elements:</strong> `document.getElementById("someId")`</li>
+                            <li><strong>Change content:</strong> `element.textContent = "New text";`</li>
+                            <li><strong>Change styles:</strong> `element.style.color = "red";`</li>
+                            <li><strong>Add new elements:</strong> `document.createElement("p")`, `parentElement.appendChild(newElement)`</li>
+                        </ul>
+                        <pre><code class="language-javascript">let myDiv = document.getElementById("myDiv");
+myDiv.textContent = "Content changed by JS!";
+myDiv.style.backgroundColor = "yellow";</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="polyfills" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Polyfills</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">A **polyfill** is a piece of JavaScript code that provides the functionality of a newer JavaScript feature in older web browsers that don't natively support it. Think of it as a translator that helps older browsers understand modern code.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Why Polyfills?</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <p>They ensure your website works consistently across a wider range of browsers, even those that might be outdated or lack certain modern capabilities.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="js-libraries" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">JavaScript Libraries</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">A **JavaScript library** is a collection of pre-written JavaScript code that provides ready-made tools (functions) to help you with common tasks, simplifying web development.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Benefits of Libraries (e.g., jQuery)</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li><strong>Shorter syntax:</strong> Do more with less code.</li>
+                            <li><strong>Simplified tasks:</strong> Make complex things (like DOM manipulation, animations, Ajax requests) easier.</li>
+                            <li><strong>Cross-browser compatibility:</strong> Often handle browser differences for you.</li>
+                        </ul>
+                        <p class="mt-2"><strong>Example: jQuery</strong> simplifies finding elements, handling events, and making server requests.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="key-code" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Key Code Examples & Functions</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">Here's a quick reference to essential JavaScript snippets and functions we've explored, which are fundamental building blocks for web interactivity.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Essential Snippets</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li><strong>Displaying messages:</strong> `alert("Your message");`, `console.log("Your message");`</li>
+                            <li><strong>Getting input:</strong> `document.getElementById('inputId').value;`</li>
+                            <li><strong>Displaying output on page:</strong> `document.getElementById('outputId').textContent = "Your message";`</li>
+                            <li><strong>Converting to number:</strong> `Number(someVariable);`</li>
+                            <li><strong>Checking if NOT a number:</strong> `isNaN(someVariable);`</li>
+                            <li><strong>Checking string content:</strong> `someString.includes('text');`</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="activity" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Activity Overview: "Number Detective"</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">You built and modified a simple game called "Number Detective: Spotting Decimals!" This game allowed users to enter text, and your JavaScript code would determine if the input was a number, and specifically if it was a whole number or a decimal number.</p>
+                <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+                    <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">Key Skills Practiced</button>
+                    <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                        <ul class="list-disc list-inside ml-4 space-y-2">
+                            <li>Using the `.includes()` string method to check for the presence of a decimal point.</li>
+                            <li>Adding a new variable (e.g., `hasDecimal`) to store boolean information.</li>
+                            <li>Nesting `if/else` statements to create more detailed decision-making logic.</li>
+                            <li>Getting user input from an HTML form element.</li>
+                            <li>Displaying results back to the user on the webpage.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="qna" class="content-section mb-12">
+                <h2 class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2">Q&A: Test Your Knowledge!</h2>
+                <p class="text-slate-700 leading-relaxed mb-4">Let's review some key concepts with these questions. Click on a question to reveal its answer.</p>
+                <div class="space-y-3">
+                    <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow">
+                        <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">1. Ajax is a combination of what technologies?</button>
+                        <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                            <p><strong>Answer:</strong> Ajax (Asynchronous JavaScript and XML) is a technique that uses **JavaScript** and **XML (or more commonly now, JSON)** to communicate with a server without reloading the entire webpage. It often involves using the `XMLHttpRequest` object or the newer `fetch` API.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow">
+                        <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">2. What does this do? `document.getElementById("main")`</button>
+                        <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                            <p><strong>Answer:</strong> This JavaScript code finds and returns the HTML element on the webpage that has the `id` attribute set to `"main"`.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow">
+                        <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">3. What does this do? `document.getElementById("main").getElementsByTagName("section");`</button>
+                        <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                            <p><strong>Answer:</strong> This first finds the HTML element with the `id` of `"main"`. Then, from *within that "main" element*, it finds and returns a collection (like a list) of all `&lt;section&gt;` HTML elements.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow">
+                        <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">4. What does this do? `document.body.style.backgroundColor = "papayawhip"`</button>
+                        <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                            <p><strong>Answer:</strong> This JavaScript code changes the background color of the entire webpage's `&lt;body&gt;` element to "papayawhip" (a light, peachy color). `document.body` refers to the `&lt;body&gt;` tag, `.style` allows access to its CSS properties, and `.backgroundColor` is the specific CSS property being set.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow">
+                        <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">5. What does this code do? (Assuming `documentCreateTextNode` is `document.createTextNode`)</button>
+                        <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                            <pre class="bg-[#ebebe0] p-3 rounded-md text-sm my-2"><code class="language-javascript">document
+    .getElementById("main")
+    .appendChild(
+        document.createElement("p")
+            .appendChild(
+                document.createTextNode("Hey, I'm walking here!") // Corrected syntax
+            )
+    );</code></pre>
+                            <p><strong>Answer:</strong> This code dynamically adds a new paragraph of text to the webpage.</p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>`document.getElementById("main")`: Finds the HTML element with the `id` of `"main"`.</li>
+                                <li>`.appendChild(...)`: Attaches something new as a child inside that "main" element.</li>
+                                <li>`document.createElement("p")`: Creates a brand new `&lt;p&gt;` (paragraph) HTML element in memory.</li>
+                                <li>`.appendChild(document.createTextNode("Hey, I'm walking here!"))`: Creates a new piece of text "Hey, I'm walking here!" and puts it inside the newly created `&lt;p&gt;` element.</li>
+                            </ul>
+                            <p><strong>Overall:</strong> It creates a new paragraph containing the text "Hey, I'm walking here!" and adds this new paragraph inside the HTML element that has the ID "main".</p>
+                        </div>
+                    </div>
+                     <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow">
+                        <button class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none">6. What is the benefit of using a JavaScript library such as jQuery?</button>
+                        <div class="accordion-content hidden mt-3 text-slate-700 leading-relaxed">
+                            <p><strong>Answer: All of the above.</strong></p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Access to a packaged collection of polyfills:</strong> Libraries often include code to ensure compatibility across different browsers.</li>
+                                <li><strong>Possibly shorter syntax:</strong> They often provide simpler ways to write common tasks.</li>
+                                <li><strong>Simplified Ajax support:</strong> They make it much easier to send and receive data from a server without reloading the page.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="bg-[#0d1321] text-white text-center p-6 mt-auto">
+        <p>&copy; ----Prepared by Priti. Keep practicing!</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+            // Function to show a section and hide others
+            function showSection(sectionId) {
+                contentSections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+            }
+
+            // Function to update active nav link
+            function updateActiveNavLink(activeLink) {
+                navLinks.forEach(link => {
+                    if (link === activeLink) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Handle hash on page load
+            if (window.location.hash) {
+                const sectionIdFromHash = window.location.hash.substring(1);
+                showSection(sectionIdFromHash);
+                const activeNavLink = document.querySelector(`.nav-link[href="${window.location.hash}"]`);
+                if (activeNavLink) {
+                    updateActiveNavLink(activeNavLink);
+                }
+            } else {
+                 // Show intro section by default if no hash
+                showSection('week3-intro'); // Default to the intro section of Week 3
+                const introNavLink = document.querySelector('.nav-link[href="#week3-intro"]');
+                if (introNavLink) {
+                    updateActiveNavLink(introNavLink);
+                }
+            }
+
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    // event.preventDefault(); // Prevent default anchor behavior if not using hash for scrolling
+                    const targetId = this.getAttribute('href').substring(1); // Get target ID from href (e.g., #section-vars -> section-vars)
+                    showSection(targetId);
+                    updateActiveNavLink(this);
+                    
+                    // Scroll to the section if it's not just show/hide
+                    // const targetElement = document.getElementById(targetId);
+                    // if (targetElement) {
+                    //    targetElement.scrollIntoView({ behavior: 'smooth' });
+                    // }
+                });
+            });
+
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        content.classList.add('hidden');
+                    } else {
+                        content.classList.remove('hidden');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

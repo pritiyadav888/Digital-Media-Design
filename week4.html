@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 4: Website Creation & Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Chosen Palette: Coolors.co (0d1321-1d2d44-3e5c76-748cab-f0ebd8) */
+      /* Application Structure Plan: Multi-page application with index.html as the entry point.
+           Overall: A multi-page application with a consistent top navigation bar for "Weeks." Each "Week" page will have its own internal structure (sidebar for main topics, main content area with accordions for sub-topics).
+           Rationale: This structure provides a clear progression through the course material ("Week 1" to "Week 4"). The top navigation offers quick switching between weeks (easy exploration). Within each week, the sidebar navigation allows users to jump to major topics, and accordions manage information density, preventing overwhelming scrolls and promoting focused learning (user understanding). This balances broad navigation with detailed content exploration. */
+      /* Visualization & Content Choices:
+           Week 1: Focus on foundational text explanations for HTML/CSS, semantic elements, selectors, and layout concepts. Code examples will be crucial.
+           Week 2: Covers more specific HTML elements (text, lists, tables, forms, media), web mechanics, and big concepts.
+           Week 3: Focuses on JavaScript basics, DOM, and web interactivity.
+           Week 4: Will cover effective website creation (planning, architecture, design principles).
+           Justification: Text is best for explanations; code blocks for syntax; interactive elements for active recall and engagement.
+           Library/Method: Vanilla JS for interactions, Tailwind for styling. */
+      /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+
+      body {
+        background: linear-gradient(
+          to bottom right,
+          #f0ebd8,
+          #748cab
+        ); /* Light cream to light blue/gray gradient */
+        font-family: sans-serif;
+        min-height: 100vh; /* Ensure gradient covers full viewport height */
+        display: flex;
+        flex-direction: column;
+        color: #0d1321; /* Darkest color for main text */
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .accordion-header::after {
+        content: "\25BC"; /* Down arrow */
+        float: right;
+        transition: transform 0.3s ease;
+      }
+      .accordion-header.active::after {
+        transform: rotate(180deg); /* Up arrow */
+      }
+      .nav-link {
+        color: #748cab; /* Changed to a lighter blue/gray for better visibility on dark sidebar */
+      }
+      .nav-link.active {
+        background-color: #3e5c76; /* Medium blue/gray from palette */
+        color: white;
+      }
+      .nav-link:hover {
+        background-color: #3e5c76; /* Medium blue/gray for hover */
+        color: white;
+      }
+      .content-section {
+        display: none; /* Hidden by default */
+      }
+      .content-section.active {
+        display: block; /* Shown when active */
+      }
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #ebebe0; /* Off-shade of f0ebd8 */
+        padding: 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        overflow-x: auto; /* For horizontal scrolling if code is too long */
+      }
+      code {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body class="font-sans">
+    <header class="bg-[#0d1321] text-white p-6 shadow-md">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+          Digital Media Design: Web Fundamentals
+        </h1>
+        <nav>
+          <ul class="flex space-x-4">
+            <li>
+              <a
+                href="index.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="week1.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 1</a
+              >
+            </li>
+            <li>
+              <a
+                href="week2.html"
+                class="text-white hover:text-[#748cab] font-semibold nav-link active"
+                >Week 2</a
+              >
+            </li>
+            <li>
+              <a
+                href="week3.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 3</a
+              >
+            </li>
+            <li>
+              <a
+                href="week4.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 4</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row container mx-auto mt-8 p-4 md:p-0">
+      <aside
+        id="sidebar"
+        class="w-full md:w-1/4 bg-[#1d2d44] p-6 rounded-lg shadow-md md:mr-8 mb-8 md:mb-0 md:sticky md:top-8 self-start"
+      >
+        <h2 class="text-xl font-semibold text-[#f0ebd8] mb-4">Week 4 Topics</h2>
+        <nav>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="#week4-intro"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Introduction</a
+              >
+            </li>
+            <li>
+              <a
+                href="#website-planning"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Website Planning</a
+              >
+            </li>
+            <li>
+              <a
+                href="#canva-wix"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Website Builders (Canva, Wix)</a
+              >
+            </li>
+            <li>
+              <a
+                href="#html-css-creation"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >HTML, CSS, and JavaScript</a
+              >
+            </li>
+            <li>
+              <a
+                href="#effective-design"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Effective Website Design</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main
+        id="main-content"
+        class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-md"
+      >
+        <section id="week4-intro" class="content-section active mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Week 4: Creating an Effective Website
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            This week, we'll explore the process of creating effective websites,
+            from initial planning and design to the use of website builders and
+            fundamental coding languages. We'll cover both simplified tools like
+            Canva and Wix, as well as the power of HTML, CSS, and JavaScript.
+          </p>
+          <p class="text-slate-700 leading-relaxed">
+            By the end of this week, you'll have a broader understanding of the
+            different approaches to website creation and the key considerations
+            for building successful online platforms.
+          </p>
+        </section>
+
+        <section id="website-planning" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Website Planning: Your Foundation for Success
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Before diving into design or code, careful planning is essential.
+            This section covers the key steps to define your website's purpose,
+            target audience, and content strategy, ensuring it meets its goals
+            and resonates with visitors.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Defining Your Website's Purpose: The "Why?"
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Every effective website starts with a clear purpose. Ask
+                yourself:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  **Inform?** (e.g., a blog sharing knowledge, a news site
+                  providing updates)
+                </li>
+                <li>**Sell?** (e.g., an online store showcasing products)</li>
+                <li>
+                  **Entertain?** (e.g., a gaming site or a platform for creative
+                  content)
+                </li>
+                <li>
+                  **Connect?** (e.g., a social media platform or a community
+                  forum)
+                </li>
+                <li>
+                  **Something else?** (e.g., a portfolio to showcase your work)
+                </li>
+              </ul>
+              <p class="mt-2">
+                A well-defined purpose guides your design, content, and
+                functionality, ensuring your website serves its intended role
+                effectively.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="canva-wix" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Website Builders: Creating Without Code
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Website builders like Canva and Wix offer user-friendly platforms
+            for creating websites without writing code. They provide templates,
+            drag-and-drop interfaces, and hosting, simplifying the process for
+            beginners or those needing a quick online presence.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Canva and Wix: A Quick Comparison
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                This section will compare and contrast Canva and Wix,
+                highlighting their strengths and weaknesses in the context of
+                website creation.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="html-css-creation" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            HTML, CSS, and JavaScript: The Coder's Toolkit
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            HTML, CSS, and JavaScript are the core technologies for building
+            websites from scratch. They offer full control over design and
+            functionality but require more technical skills than website
+            builders.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The Roles of HTML, CSS, and JavaScript
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                This section will revisit the roles of HTML, CSS, and
+                JavaScript, emphasizing their power and flexibility in creating
+                custom websites.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="effective-design" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Effective Website Design: Principles and Best Practices
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            This section explores essential design principles and best practices
+            that apply to all website creation methods, ensuring your site is
+            visually appealing, user-friendly, and achieves its objectives.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Key Design Principles
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>This section will cover core design principles such as:</p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>Visual Hierarchy</li>
+                <li>User-Centered Design</li>
+                <li>Consistency and Navigation</li>
+                <li>Accessibility</li>
+                <li>Mobile-First Approach</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="bg-[#0d1321] text-white text-center p-6 mt-auto">
+      <p>&copy; ----Prepared by Priti. Keep practicing!</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const contentSections = document.querySelectorAll(".content-section");
+        const accordionHeaders = document.querySelectorAll(".accordion-header");
+
+        // Function to show a section and hide others
+        function showSection(sectionId) {
+          contentSections.forEach((section) => {
+            if (section.id === sectionId) {
+              section.classList.add("active");
+            } else {
+              section.classList.remove("active");
+            }
+          });
+        }
+
+        // Function to update active nav link
+        function updateActiveNavLink(activeLink) {
+          navLinks.forEach((link) => {
+            if (link === activeLink) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        }
+
+        // Handle hash on page load
+        if (window.location.hash) {
+          const sectionIdFromHash = window.location.hash.substring(1);
+          showSection(sectionIdFromHash);
+          const activeNavLink = document.querySelector(
+            `.nav-link[href="${window.location.hash}"]`
+          );
+          if (activeNavLink) {
+            updateActiveNavLink(activeNavLink);
+          }
+        } else {
+          // Show intro section by default if no hash
+          showSection("week4-intro"); // Default to the intro section of Week 4
+          const introNavLink = document.querySelector(
+            '.nav-link[href="#week4-intro"]'
+          );
+          if (introNavLink) {
+            updateActiveNavLink(introNavLink);
+          }
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            // event.preventDefault(); // Prevent default anchor behavior if not using hash for scrolling
+            const targetId = this.getAttribute("href").substring(1); // Get target ID from href (e.g., #section-vars -> section-vars)
+            showSection(targetId);
+            updateActiveNavLink(this);
+
+            // Scroll to the section if it's not just show/hide
+            // const targetElement = document.getElementById(targetId);
+            // if (targetElement) {
+            //    targetElement.scrollIntoView({ behavior: 'smooth' });
+            // }
+          });
+        });
+
+        accordionHeaders.forEach((header) => {
+          header.addEventListener("click", function () {
+            this.classList.toggle("active");
+            const content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+              content.style.maxHeight = null;
+              content.classList.add("hidden");
+            } else {
+              content.classList.remove("hidden");
+              content.style.maxHeight = content.scrollHeight + "px";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

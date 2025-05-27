@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 2: HTML Elements & Web Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Chosen Palette: Coolors.co (0d1321-1d2d44-3e5c76-748cab-f0ebd8) */
+      /* Application Structure Plan: Multi-page application with index.html as the entry point.
+           Overall: A multi-page application with a consistent top navigation bar for "Weeks." Each "Week" page will have its own internal structure (sidebar for main topics, main content area with accordions for sub-topics).
+           Rationale: This structure provides a clear progression through the course material ("Week 1" to "Week 3"). The top navigation offers quick switching between weeks (easy exploration). Within each week, the sidebar navigation allows users to jump to major topics, and accordions manage information density, preventing overwhelming scrolls and promoting focused learning (user understanding). This balances broad navigation with detailed content exploration. */
+      /* Visualization & Content Choices:
+           Week 1: Focus on foundational text explanations for HTML/CSS, semantic elements, selectors, and layout concepts. Code examples will be crucial.
+           Week 2: Covers more specific HTML elements (text, lists, tables, forms, media), web mechanics, and big concepts.
+           Week 3: Focuses on JavaScript basics, DOM, and web interactivity.
+           Justification: Text is best for explanations; code blocks for syntax; interactive elements for active recall and engagement.
+           Library/Method: Vanilla JS for interactions, Tailwind for styling. */
+      /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+
+      body {
+        background: linear-gradient(
+          to bottom right,
+          #f0ebd8,
+          #748cab
+        ); /* Light cream to light blue/gray gradient */
+        font-family: sans-serif;
+        min-height: 100vh; /* Ensure gradient covers full viewport height */
+        display: flex;
+        flex-direction: column;
+        color: #0d1321; /* Darkest color for main text */
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .accordion-header::after {
+        content: "\25BC"; /* Down arrow */
+        float: right;
+        transition: transform 0.3s ease;
+      }
+      .accordion-header.active::after {
+        transform: rotate(180deg); /* Up arrow */
+      }
+      .nav-link {
+        color: #f0ebd8; /* Light cream for better visibility on dark sidebar */
+      }
+      .nav-link.active {
+        background-color: #3e5c76; /* Medium blue/gray from palette */
+        color: white;
+      }
+      .nav-link:hover {
+        background-color: #3e5c76; /* Medium blue/gray for hover */
+        color: white;
+      }
+      .content-section {
+        display: none; /* Hidden by default */
+      }
+      .content-section.active {
+        display: block; /* Shown when active */
+      }
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #ebebe0; /* Off-shade of f0ebd8 */
+        padding: 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        overflow-x: auto; /* For horizontal scrolling if code is too long */
+      }
+      code {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <header class="bg-[#0d1321] text-white p-6 shadow-md">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+          Digital Media Design: Web Fundamentals
+        </h1>
+        <nav>
+          <ul class="flex space-x-4">
+            <li>
+              <a
+                href="index.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="week1.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 1</a
+              >
+            </li>
+            <li>
+              <a
+                href="week2.html"
+                class="text-white hover:text-[#748cab] font-semibold nav-link active"
+                >Week 2</a
+              >
+            </li>
+            <li>
+              <a
+                href="week3.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 3</a
+              >
+            </li>
+            <li>
+              <a
+                href="week4.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 4</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row container mx-auto mt-8 p-4 md:p-0">
+      <aside
+        id="sidebar"
+        class="w-full md:w-1/4 bg-[#1d2d44] p-6 rounded-lg shadow-md md:mr-8 mb-8 md:mb-0 md:sticky md:top-8 self-start"
+      >
+        <h2 class="text-xl font-semibold text-[#f0ebd8] mb-4">Week 2 Topics</h2>
+        <nav>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="#html-structure"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >HTML Document Structure</a
+              >
+            </li>
+            <li>
+              <a
+                href="#marking-text"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Marking Up Text</a
+              >
+            </li>
+            <li>
+              <a
+                href="#web-works"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >How the Web Works</a
+              >
+            </li>
+            <li>
+              <a
+                href="#big-concepts"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Big Concepts in Web Design</a
+              >
+            </li>
+            <li>
+              <a
+                href="#tables"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >HTML Tables</a
+              >
+            </li>
+            <li>
+              <a
+                href="#forms"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Web Forms</a
+              >
+            </li>
+            <li>
+              <a
+                href="#embedded-media"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Embedded Media</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main
+        id="main-content"
+        class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-md"
+      >
+        <section id="week2-intro" class="content-section active mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Week 2: Building Blocks of the Web
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Welcome to Week 2! This module dives deeper into the fundamental
+            building blocks of web pages. You'll learn about the essential HTML
+            elements used to structure content, how the internet and web truly
+            function, key concepts that guide modern web design, and how to
+            incorporate interactive forms and rich media into your sites.
+          </p>
+          <p class="text-slate-700 leading-relaxed">
+            By the end of this week, you'll have a solid understanding of not
+            just *what* HTML tags do, but *why* they are used in specific ways
+            to create accessible, functional, and well-performing web
+            experiences.
+          </p>
+        </section>
+
+        <section id="html-structure" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            HTML Document Structure: The Blueprint
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Every webpage starts with a foundational HTML structure. Think of it
+            as the architectural blueprint that tells the browser how to
+            organize all the content.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Anatomy of an HTML Element: Tags & Content
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                HTML elements are the building blocks, identified by **tags**
+                like `&lt;p&gt;` for a paragraph or `&lt;h1&gt;` for a main
+                heading. Most elements come in pairs: an opening tag and a
+                closing tag, wrapping around the content.
+              </p>
+              <pre><code class="language-html">&lt;p&gt;This is a paragraph.&lt;/p&gt;
+&lt;h1&gt;Main Title Here&lt;/h1&gt;</code></pre>
+              <p class="mt-2">
+                The browser reads these tags, but only displays what's *between*
+                them. A common beginner mistake is forgetting the closing slash
+                (`/`) in a tag, which can make your page look very strange!
+              </p>
+              <p class="mt-2">
+                **Pro Tip:** While HTML isn't case-sensitive (`&lt;P&gt;` works
+                just like `&lt;p&gt;`), always use lowercase for consistency and
+                modern best practices.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The Minimal Webpage Skeleton
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Every HTML5 document should start with this basic, essential
+                structure. It's the bare minimum for a well-formed webpage:
+              </p>
+              <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Awesome Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- All your visible content goes here --&gt;
+    &lt;h1&gt;Hello, Web!&lt;/h1&gt;
+    &lt;p&gt;This is my first structured page.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+              <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                <li>
+                  `&lt;!DOCTYPE html&gt;`: The very first line, telling the
+                  browser this is an HTML5 document.
+                </li>
+                <li>
+                  `&lt;html lang="en"&gt;`: The root of your page, indicating
+                  the document's language (important for accessibility).
+                </li>
+                <li>
+                  `&lt;head&gt;`: Contains invisible information about the page,
+                  like its title, character set (`UTF-8` for broad character
+                  support), and mobile responsiveness settings.
+                </li>
+                <li>
+                  `&lt;title&gt;`: The text that appears in the browser tab or
+                  window title. Crucial for users and search engines!
+                </li>
+                <li>
+                  `&lt;body&gt;`: This is where all the visible content of your
+                  webpage lives – headings, paragraphs, images, videos,
+                  everything users see.
+                </li>
+              </ul>
+              <p class="mt-2 text-sm italic">
+                **Mini-Activity:** Try changing the text inside the
+                `&lt;title&gt;` tags in your own `index.html` file and see how
+                your browser tab changes!
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Smart File Naming Conventions
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                How you name your files matters! Good naming makes your project
+                organized and prevents broken links.
+              </p>
+              <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                <li>
+                  **Proper endings (suffixes):** HTML files need `.html` or
+                  `.htm`. Images use `.png`, `.jpg`, `.gif`, or `.svg`. Videos
+                  use `.mp4`, `.webm`, etc.
+                </li>
+                <li>
+                  **No spaces:** Use hyphens (`-`) or underscores (`_`) instead.
+                  `my-awesome-page.html` is good; `my awesome page.html` is bad.
+                </li>
+                <li>
+                  **Avoid special characters:** Stick to letters, numbers,
+                  hyphens, and underscores.
+                </li>
+                <li>
+                  **Lowercase is king:** Always use lowercase for filenames. It
+                  prevents issues on different web servers.
+                </li>
+                <li>
+                  **Keep it short & descriptive:** `about-us.html` is better
+                  than `a-long-document-about-our-company.html`.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Troubleshooting: When Things Go Wrong
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Even pros make mistakes! Here are common reasons your webpage
+                might not look right, and how to debug them:
+              </p>
+              <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                <li>
+                  **"My changes aren't showing!"** Did you save the file? Did
+                  you refresh the browser? Is the file in the correct folder?
+                </li>
+                <li>
+                  **"Half my page disappeared!"** You likely missed a closing
+                  tag (`&lt;/p&gt;`) or a closing bracket (`&gt;`) or a quote
+                  mark (`"`) in your HTML. The browser gets confused and stops
+                  rendering.
+                </li>
+                <li>
+                  **"Broken image icon!"** The browser can't find your image.
+                  Double-check the image file name and its location. Is it in
+                  the same folder, or did you specify the correct subfolder?
+                </li>
+                <li>
+                  **Browsers ignore extra whitespace:** Multiple spaces, line
+                  breaks, and tabs in your HTML source don't affect how the page
+                  looks. They're just for making your code readable.
+                </li>
+              </ul>
+              <p class="mt-2">**Your Best Friends for Debugging:**</p>
+              <ul class="list-disc list-inside ml-4 space-y-1">
+                <li>
+                  **Browser Developer Tools (Console tab):** Press `F12`
+                  (Windows/Linux) or `Cmd+Option+I` (Mac) and look for red error
+                  messages.
+                </li>
+                <li>
+                  **Online HTML Validators:** Tools like the
+                  <a
+                    href="https://validator.w3.org/"
+                    target="_blank"
+                    class="text-[#3e5c76] hover:underline"
+                    >W3C Markup Validation Service</a
+                  >
+                  check your HTML against official rules and tell you exactly
+                  where your errors are.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="marking-text" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Marking Up Text: Giving Content Meaning
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            HTML's main job is to add meaning (semantics) and structure to your
+            content. It's *not* about making it look pretty (that's CSS's job!).
+            Always choose the HTML element that best describes what your content
+            *is*.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Paragraphs & Headings: The Basics of Text Flow
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>`&lt;p&gt;` (Paragraph):</strong> Your go-to for basic
+                  blocks of text. Browsers automatically put paragraphs on new
+                  lines with some space above and below.
+                </li>
+                <li>
+                  <strong>`&lt;h1&gt;` to `&lt;h6&gt;` (Headings):</strong> Used
+                  for titles and subtitles. `&lt;h1&gt;` is for the most
+                  important heading on a page (usually only one per page!), and
+                  `&lt;h6&gt;` is the least important. Use them in a logical
+                  order (`h1` then `h2`, etc.) to create a clear outline for
+                  your page, which helps both users (especially with screen
+                  readers) and search engines.
+                </li>
+              </ul>
+              <p class="mt-2">
+                **Golden Rule:** All visible text on your webpage *must* be
+                inside an HTML element. No "naked text" allowed!
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Thematic Breaks (`&lt;hr&gt;`): A Change of Topic
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The `&lt;hr&gt;` element represents a "thematic break" – a
+                significant shift in topic or section within a document.
+                Historically, it displayed as a horizontal line, and many
+                browsers still do. Semantically, it's about indicating a logical
+                separation in content.
+              </p>
+              <pre><code class="language-html">&lt;p&gt;Here's some introductory text about our new product.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Now, let's dive into the technical specifications.&lt;/p&gt;</code></pre>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Lists: Organizing Information
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Humans love lists! HTML gives us three ways to structure them:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>Unordered Lists (`&lt;ul&gt;`):</strong> For items
+                  where the order doesn't matter (like a grocery list). Each
+                  item is an `&lt;li&gt;` (list item). Browsers usually show
+                  these with bullet points.
+                </li>
+                <li>
+                  <strong>Ordered Lists (`&lt;ol&gt;`):</strong> For items where
+                  the sequence is important (like step-by-step instructions).
+                  Each item is also an `&lt;li&gt;`. Browsers usually number
+                  these automatically.
+                </li>
+                <li>
+                  <strong>Description Lists (`&lt;dl&gt;`):</strong> For pairs
+                  of names and values (like terms and their definitions). Uses
+                  `&lt;dt&gt;` (description term) for the name and `&lt;dd&gt;`
+                  (description details) for the value.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;!-- Unordered List Example --&gt;
+&lt;ul&gt;
+    &lt;li&gt;Apples&lt;/li&gt;
+    &lt;li&gt;Bananas&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Ordered List Example --&gt;
+&lt;ol&gt;
+    &lt;li&gt;Boil water&lt;/li&gt;
+    &lt;li&gt;Add pasta&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- Description List Example --&gt;
+&lt;dl&gt;
+    &lt;dt&gt;HTML&lt;/dt&gt;
+    &lt;dd&gt;HyperText Markup Language&lt;/dd&gt;
+    &lt;dt&gt;CSS&lt;/dt&gt;
+    &lt;dd&gt;Cascading Style Sheets&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+              <p class="mt-2 text-sm italic">
+                **Mini-Activity:** Think of 3 steps for making your favorite
+                drink. How would you mark that up as an ordered list in HTML?
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Organizing Page Content: HTML5 Semantic Grouping
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Beyond basic text, HTML5 introduced powerful **semantic
+                elements** to give meaning to larger sections of your webpage.
+                This helps browsers, search engines, and assistive technologies
+                understand the purpose of different content blocks.
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>`&lt;main&gt;`</strong>: Identifies the primary,
+                  unique content of the page. There should only be one
+                  `&lt;main&gt;` per page.
+                </li>
+                <li>
+                  <strong>`&lt;header&gt;`</strong>: Introductory content for a
+                  page, a section, or an article. Often contains logos, site
+                  titles, and main navigation.
+                </li>
+                <li>
+                  <strong>`&lt;nav&gt;`</strong>: Defines a section containing
+                  navigation links (e.g., your main menu).
+                </li>
+                <li>
+                  <strong>`&lt;section&gt;`</strong>: A thematic grouping of
+                  content. Think of it as a logical chapter or distinct segment
+                  within your page.
+                </li>
+                <li>
+                  <strong>`&lt;article&gt;`</strong>: Encapsulates
+                  self-contained content that could be independently distributed
+                  or reused, like a blog post, news story, or user comment.
+                </li>
+                <li>
+                  <strong>`&lt;aside&gt;`</strong>: Content that is tangentially
+                  related to the main content, often presented as a sidebar
+                  (e.g., related links, advertisements, pull quotes).
+                </li>
+                <li>
+                  <strong>`&lt;footer&gt;`</strong>: Concluding content for a
+                  page, section, or article. Typically includes copyright info,
+                  contact details, or secondary navigation.
+                </li>
+                <li>
+                  <strong>`&lt;address&gt;`</strong>: Provides contact
+                  information for the author/owner of the nearest
+                  `&lt;article&gt;` or `&lt;body&gt;` element.
+                </li>
+              </ul>
+              <p class="mt-2 text-sm italic">
+                **Mini-Activity:** Look at a favorite news website. Can you
+                identify where they might use `&lt;header&gt;`, `&lt;nav&gt;`,
+                `&lt;article&gt;`, and `&lt;aside&gt;`?
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Text-Level (Inline) Elements: Highlighting Phrases
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                These elements apply semantic meaning or visual emphasis to
+                phrases *within* a block of text. They "go with the flow" and
+                don't start new lines.
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  `&lt;em&gt;` (Emphasis): For stressed emphasis (e.g., "This is
+                  *really* important!"). Often italicized by default.
+                </li>
+                <li>
+                  `&lt;strong&gt;` (Strong Importance): For content of strong
+                  importance, seriousness, or urgency (e.g., "**Warning:** Do
+                  not proceed!"). Often bold by default.
+                </li>
+                <li>
+                  `&lt;b&gt;` (Bold): For visually emphasized text without
+                  strong semantic importance (e.g., keywords in a review).
+                </li>
+                <li>
+                  `&lt;i&gt;` (Italic): For alternative voice, technical terms,
+                  or foreign words.
+                </li>
+                <li>
+                  `&lt;u&gt;` (Underline): For formally named entities or
+                  misspelled words (avoid for links!).
+                </li>
+                <li>
+                  `&lt;s&gt;` (Strikethrough): For text that is no longer
+                  accurate or relevant.
+                </li>
+                <li>
+                  `&lt;small&gt;`: For fine print, disclaimers, or copyright
+                  notices.
+                </li>
+                <li>`&lt;code&gt;`: For displaying computer code snippets.</li>
+                <li>
+                  `&lt;var&gt;`: For variables in mathematical expressions or
+                  programming.
+                </li>
+                <li>`&lt;samp&gt;`: For sample program output.</li>
+                <li>`&lt;kbd&gt;`: For user-entered keyboard input.</li>
+                <li>
+                  `&lt;sub&gt;` (Subscript) / `&lt;sup&gt;` (Superscript): For
+                  chemical formulas (`H₂O`) or mathematical equations (`E=MC²`).
+                </li>
+                <li>
+                  `&lt;mark&gt;`: For text that is contextually relevant, like
+                  highlighting search terms.
+                </li>
+                <li>
+                  `&lt;time&gt;`: For machine-readable dates and times (e.g.,
+                  `&lt;time datetime="2026-01-15"&gt;January 15th,
+                  2026&lt;/time&gt;`).
+                </li>
+                <li>
+                  `&lt;br&gt;` (Line Break): Inserts a single line break. Useful
+                  for addresses or poetry.
+                </li>
+                <li>
+                  `&lt;wbr&gt;` (Word Break): Suggests a safe place for a
+                  browser to break a very long word if it needs to wrap.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Generic Elements: `&lt;div&gt;` and `&lt;span&gt;`
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                When no other semantic HTML element perfectly describes your
+                content, `&lt;div&gt;` and `&lt;span&gt;` come to the rescue.
+                They are "generic" containers that get their meaning from `id`
+                and `class` attributes.
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>`&lt;div&gt;` (Division):</strong> A generic
+                  **block-level** container. It's often used to group larger
+                  sections of content for layout purposes or to apply styles to
+                  a whole block. Think of it as a flexible box that starts on a
+                  new line.
+                </li>
+                <li>
+                  <strong>`&lt;span&gt;` (Span):</strong> A generic **inline**
+                  container. It's used to group smaller pieces of text or other
+                  inline elements, often to apply a specific style to just a
+                  word or phrase within a line. It doesn't start a new line.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;div id="product-card"&gt;
+    &lt;h3&gt;Product Name&lt;/h3&gt;
+    &lt;p&gt;Price: &lt;span class="price-highlight"&gt;$29.99&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              `id` and `class` Attributes: Naming Your Elements
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                These attributes are essential for giving your HTML elements
+                unique identities or grouping them for styling and JavaScript
+                interactions.
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>`id` attribute:</strong> Assigns a **unique
+                  identifier** to a single element on the page. Like a person's
+                  unique ID number. You should only use an `id` value once per
+                  HTML document. Great for direct targeting by JavaScript or for
+                  creating links to specific sections (`&lt;a
+                  href="#section-id"&gt;`).
+                </li>
+                <li>
+                  <strong>`class` attribute:</strong> Classifies elements into
+                  **conceptual groups**. Like assigning students to different
+                  "classes" (e.g., "math-class", "science-class"). Multiple
+                  elements can share the same class. This is perfect for
+                  applying the same styles to many elements (e.g., all buttons
+                  look the same) or for JavaScript to select multiple related
+                  elements.
+                </li>
+              </ul>
+              <p class="mt-2">
+                Both `id` and `class` are **global attributes**, meaning you can
+                use them on almost any HTML element.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              ARIA for Accessibility: Making Webpages for Everyone
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                ARIA (Accessible Rich Internet Applications) is a set of special
+                attributes (`role`, `aria-label`, `aria-hidden`, etc.) that you
+                can add to HTML elements. Their purpose is to provide extra
+                semantic information for **assistive technologies** like screen
+                readers, especially for dynamic content or custom UI components
+                that might not have built-in accessibility.
+              </p>
+              <pre><code class="language-html">&lt;div role="alert"&gt;Your message has been sent successfully!&lt;/div&gt;
+&lt;button role="switch" aria-checked="false"&gt;Dark Mode Toggle&lt;/button&gt;</code></pre>
+              <p class="mt-2">
+                ARIA helps describe the purpose and state of elements to users
+                who can't see or interact with them visually, ensuring a more
+                inclusive web experience.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Character Escapes: Speaking HTML's Language
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Sometimes, you need to display characters that HTML might
+                confuse with its own code (like `<` or `>`). To do this, you use
+                **character entity references** (also called character escapes).
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  They start with an ampersand (`&`) and end with a semicolon
+                  (`;`).
+                </li>
+                <li>
+                  **Named entities:** Use an easy-to-remember name (e.g., `&lt;`
+                  for `<`).
+                </li>
+                <li>
+                  **Numeric entities:** Use a number code (e.g., `&#60;` for
+                  `<`).
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;p&gt;To display the less-than symbol, use &amp;lt;&lt;/p&gt;
+&lt;p&gt;Copyright &amp;copy; 2026&lt;/p&gt;</code></pre>
+              <p class="mt-2">
+                This ensures your browser displays the character correctly
+                instead of trying to interpret it as part of an HTML tag.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="web-works" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            How the Web Works: The Internet's Magic
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Have you ever wondered what happens when you type a website address
+            and press Enter? It's a fascinating journey involving the internet
+            and the web. While often used interchangeably, they're distinct!
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Internet vs. The Web: Not the Same Thing!
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>The Internet:</strong> This is the massive, global
+                  network of connected computers. It's the physical
+                  infrastructure (cables, routers, servers) and the rules
+                  (protocols) that allow any computer to talk to any other
+                  computer. Think of it as the entire road system.
+                </li>
+                <li>
+                  <strong>The Web (World Wide Web):</strong> This is just *one*
+                  of the many ways information is shared *over* the internet.
+                  It's unique because it uses **hypertext links** to connect
+                  documents (webpages) to each other, forming a "web" of
+                  information. It uses a specific set of rules called **HTTP**
+                  (HyperText Transfer Protocol). Think of it as the specific
+                  rules for driving on those roads to visit websites.
+                </li>
+              </ul>
+              <p class="mt-2">
+                The Web was invented in 1989 by Tim Berners-Lee at CERN, a
+                particle physics lab. Its ongoing development is guided by the
+                W3C (World Wide Web Consortium).
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The Dance: Server & Browser
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Every time you visit a website, your browser and a server
+                perform a little dance:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>The Server:</strong> A powerful computer (or
+                  specialized software) that "serves up" webpages and files when
+                  requested. It's always waiting for your requests.
+                </li>
+                <li>
+                  <strong>Your Browser (the Client):</strong> The software you
+                  use (like Chrome, Firefox, Safari) that "requests" webpages
+                  from servers and then displays them for you.
+                </li>
+              </ul>
+              <p class="mt-2">**The Process:**</p>
+              <ol class="list-decimal list-inside ml-4 space-y-1">
+                <li>You type a URL or click a link.</li>
+                <li>Your browser sends an **HTTP Request** to the server.</li>
+                <li>
+                  The server finds the requested files (HTML, CSS, images, etc.)
+                  and sends them back as an **HTTP Response**.
+                </li>
+                <li>
+                  Your browser's **rendering engine** takes all these pieces and
+                  assembles them into the beautiful webpage you see.
+                </li>
+              </ol>
+              <p class="mt-2">
+                **IP Addresses & DNS (The Phonebook of the Internet):** Every
+                device connected to the internet has a unique numeric **IP
+                address** (e.g., `192.168.1.1`). Since these are hard to
+                remember, the **DNS (Domain Name System)** acts like a
+                phonebook, translating easy-to-remember **domain names** (like
+                `google.com`) into their corresponding IP addresses.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              URLs: Your Web Address
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                A **URL (Uniform Resource Locator)** is the unique address for
+                every single webpage or resource on the internet. It's how your
+                browser knows exactly where to find something.
+              </p>
+              <p class="mt-2">**Anatomy of a Modern URL:**</p>
+              <pre><code class="language-text">https://www.example.com/blog/2026/my-first-post.html
+|         |             |        |           |
+Protocol  Domain Name   Path     Filename</code></pre>
+              <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                <li>
+                  **Protocol (`https://`):** The rules for communication.
+                  `HTTPS` (HyperText Transfer Protocol Secure) is the standard
+                  today, encrypting data for security. Always use `HTTPS` for
+                  your sites!
+                </li>
+                <li>
+                  **Domain Name (`www.example.com`):** The human-readable name
+                  of the website.
+                </li>
+                <li>
+                  **Path (`/blog/2026/`):** The folder structure on the server
+                  where the file is located.
+                </li>
+                <li>
+                  **Filename (`my-first-post.html`):** The specific file being
+                  requested.
+                </li>
+              </ul>
+              <p class="mt-2">
+                **Did you know?** If a URL ends with a folder name (e.g.,
+                `example.com/blog/`), the server often looks for a default file
+                inside that folder, usually named `index.html`.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Anatomy of a Web Page: The Assembly Line
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                What you see as one seamless webpage is actually an assembly of
+                multiple files by your browser:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  **HTML Document:** The main blueprint. It contains the text
+                  content and tells the browser where to find all the other
+                  pieces.
+                </li>
+                <li>
+                  **Style Sheets (CSS):** Separate files that define how all
+                  your HTML elements should look (colors, fonts, layout).
+                </li>
+                <li>
+                  **JavaScript Files:** Separate files that add interactivity
+                  and dynamic behavior.
+                </li>
+                <li>
+                  **Images/Videos/Audio:** Individual media files linked within
+                  the HTML.
+                </li>
+              </ul>
+              <p class="mt-2">
+                Your browser's **rendering engine** is the magic worker that
+                gathers all these separate files and pieces them together into
+                the final, interactive webpage you experience. This usually
+                happens in milliseconds!
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="big-concepts" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Big Concepts in Web Design: Navigating the Modern Web
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            As a web designer in 2026, you're building for a diverse and
+            ever-changing digital landscape. These "Big Concepts" are guiding
+            principles to help you create effective, robust, and user-friendly
+            websites.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              A Multitude of Devices: Design for Everywhere
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Gone are the days when everyone viewed websites on a desktop
+                computer. Today, users access the web from countless devices:
+                smartphones, tablets, smartwatches, smart TVs, gaming consoles,
+                and even car dashboards!
+              </p>
+              <p class="mt-2">
+                **Key Takeaway:** You can *never* assume how your design will be
+                viewed. Always design for flexibility and adaptability across
+                all possible screen sizes, input methods (touch, mouse, voice),
+                and network speeds. **Mobile-first** thinking (designing for
+                small screens first, then scaling up) is a common and effective
+                strategy.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Web Standards: The Universal Language of the Web
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Web standards are like the agreed-upon rules for building
+                websites, documented by the W3C (World Wide Web Consortium).
+                Sticking to these standards is absolutely crucial for:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-1">
+                <li>
+                  **Consistency:** Your site will look and behave predictably
+                  across different browsers (Chrome, Firefox, Safari, Edge,
+                  etc.).
+                </li>
+                <li>
+                  **Future-Proofing:** Standards help ensure your content
+                  remains readable and functional as web technologies evolve.
+                </li>
+                <li>
+                  **Accessibility:** Standard-compliant code is easier for
+                  assistive technologies to understand.
+                </li>
+              </ul>
+              <p class="mt-2">
+                Building with standards reduces headaches and creates a more
+                reliable web experience for everyone.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Progressive Enhancement: Build from the Core
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                This strategy means you start by building a webpage that
+                provides a solid, functional "baseline experience" for *all*
+                users, even those with older browsers or slower connections.
+                Then, you progressively add more advanced features, visual
+                flair, and interactivity for users whose browsers can support
+                them.
+              </p>
+              <p class="mt-2">
+                **Think of it like this:** Everyone gets the basic information
+                (the core content), but those with modern devices get extra
+                "bells and whistles" (animations, interactive maps, etc.). This
+                ensures your site is accessible and usable by the widest
+                possible audience.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Responsive Web Design (RWD): Adapting to Any Screen
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                RWD is the primary strategy for making your website look great
+                on any screen size. Instead of creating separate websites for
+                desktop and mobile, you design one website that **responds** to
+                the size of the user's browser window (the "viewport").
+              </p>
+              <p class="mt-2">
+                This is achieved using CSS **media queries** (which apply
+                different styles based on screen width), flexible images, and
+                fluid layouts (using percentages or modern CSS Grid/Flexbox).
+                Your content might rearrange, images might resize, and
+                navigation might change from a menu bar to a "hamburger" icon,
+                all on the same single HTML page.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Accessibility: Web for Everyone
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Accessibility means designing and building webpages that are
+                usable by *everyone*, regardless of their abilities or
+                disabilities. This includes users with visual impairments (who
+                might use screen readers), mobility impairments (who might use
+                keyboards or voice commands), auditory impairments, or cognitive
+                impairments.
+              </p>
+              <p class="mt-2">
+                **Why it matters:** It's not just about compliance; it's about
+                inclusivity. Accessible sites reach a wider audience and often
+                perform better in search engines. The W3C's Web Accessibility
+                Initiative (WAI) provides guidelines (WCAG) to help developers
+                achieve this.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Site Performance: Speed is Key
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Site performance is simply how fast your webpage loads and
+                becomes interactive for the user. In today's fast-paced world,
+                speed is critical:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-1">
+                <li>Users expect sites to load in under 2 seconds.</li>
+                <li>Slow sites lead to users leaving and not returning.</li>
+                <li>
+                  Search engines (like Google) prioritize faster sites in their
+                  rankings.
+                </li>
+              </ul>
+              <p class="mt-2">
+                **Tips for Speed:** Optimize images (make them smaller),
+                minimize HTML/CSS/JS code, reduce unnecessary "trips" to the
+                server (HTTP requests), and load scripts efficiently.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="tables" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            HTML Tables: Organizing Data
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            HTML tables are specifically designed for presenting **tabular
+            data** – information arranged neatly in rows and columns. Think
+            schedules, product comparisons, or financial figures. **Important:**
+            Tables are for data, *not* for arranging your entire webpage layout
+            (we use CSS Grid or Flexbox for that now!).
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Basic Table Structure
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>A simple table is built with these core elements:</p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  `&lt;table&gt;`: The main container for your entire table.
+                </li>
+                <li>
+                  `&lt;tr&gt;` (Table Row): Defines a single row in your table.
+                </li>
+                <li>
+                  `&lt;th&gt;` (Table Header): Defines a header cell. These
+                  usually appear bold and centered by default, providing labels
+                  for columns or rows.
+                </li>
+                <li>
+                  `&lt;td&gt;` (Table Data): Defines a standard data cell. This
+                  is where your actual information goes.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Item&lt;/th&gt;
+        &lt;th&gt;Quantity&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Apples&lt;/td&gt;
+        &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+              <p class="mt-2">
+                The number of columns in your table is automatically determined
+                by how many `&lt;th&gt;` or `&lt;td&gt;` cells you put in each
+                row.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Spanning Cells: `colspan` & `rowspan`
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Sometimes, a single cell needs to stretch across multiple
+                columns or rows. This is where `colspan` and `rowspan`
+                attributes come in handy:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  `colspan="number"`: Makes a cell span horizontally across the
+                  specified number of columns.
+                </li>
+                <li>
+                  `rowspan="number"`: Makes a cell span vertically down the
+                  specified number of rows.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th colspan="2"&gt;Product Details&lt;/th&gt; &lt;!-- This header spans 2 columns --&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Name&lt;/td&gt;
+        &lt;td&gt;Widget X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td rowspan="2"&gt;Specs&lt;/td&gt; &lt;!-- This cell spans 2 rows --&gt;
+        &lt;td&gt;Weight: 1kg&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Color: Blue&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Table Accessibility: Making Tables Understandable for Everyone
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Tables can be tricky for users with screen readers (software
+                that reads webpage content aloud). To make your tables
+                accessible:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  `&lt;caption&gt;`: Always provide a descriptive title or
+                  summary for your table using the `&lt;caption&gt;` element,
+                  placed immediately after the `&lt;table&gt;` tag.
+                </li>
+                <li>
+                  `scope` attribute on `&lt;th&gt;`: Explicitly tell the browser
+                  if a header (`&lt;th&gt;`) applies to a `row` or a `col`
+                  (column). This helps screen readers correctly associate data
+                  with its headers.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;table&gt;
+    &lt;caption&gt;Monthly Sales Performance (Q1 2026)&lt;/caption&gt;
+    &lt;tr&gt;
+        &lt;th scope="col"&gt;Month&lt;/th&gt;
+        &lt;th scope="col"&gt;Revenue&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th scope="row"&gt;January&lt;/th&gt;
+        &lt;td&gt;$50,000&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+              <p class="mt-2 text-sm italic">
+                **Mini-Activity:** Imagine a simple table for a class schedule
+                (e.g., "Time" and "Subject"). How would you use
+                `&lt;caption&gt;` and `scope` attributes?
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Row and Column Groups: Advanced Table Structure
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                For more complex tables, you can semantically group rows and
+                columns to provide even more structure and make them easier to
+                style or interact with using JavaScript:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>`&lt;thead&gt;`: Groups the header rows of a table.</li>
+                <li>
+                  `&lt;tbody&gt;`: Groups the main body rows of a table (you can
+                  have multiple `&lt;tbody&gt;` elements).
+                </li>
+                <li>
+                  `&lt;tfoot&gt;`: Groups the footer rows of a table (e.g.,
+                  totals, footnotes).
+                </li>
+                <li>
+                  `&lt;colgroup&gt;`: Groups columns together for styling or
+                  semantic purposes.
+                </li>
+                <li>
+                  `&lt;col&gt;`: Defines properties for one or more columns
+                  within a `&lt;colgroup&gt;`.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;&lt;th&gt;Product&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;&lt;td&gt;Laptop&lt;/td&gt;&lt;td&gt;$1200&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+    &lt;tfoot&gt;
+        &lt;tr&gt;&lt;td colspan="2"&gt;All prices in USD&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="forms" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Web Forms: Collecting User Input
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Web forms are the backbone of interaction on the internet, allowing
+            users to submit information, make purchases, sign up for services,
+            or search for content. They combine visible HTML controls with
+            behind-the-scenes server-side processing.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              How Web Forms Work (The Journey of Your Data)
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                When you fill out and submit a web form, here's the simplified
+                journey your data takes:
+              </p>
+              <ol class="list-decimal list-inside ml-4 space-y-1">
+                <li>
+                  You interact with HTML form controls (like text boxes,
+                  buttons, checkboxes) on a webpage.
+                </li>
+                <li>You click a "Submit" button.</li>
+                <li>
+                  Your browser gathers all the information you entered, encodes
+                  it, and sends it as an **HTTP Request** to a specific
+                  server-side application (a program running on the web server).
+                </li>
+                <li>
+                  The server-side application processes your data (e.g., saves
+                  it to a database, sends an email, performs a calculation).
+                </li>
+                <li>
+                  The server sends an **HTTP Response** back to your browser,
+                  often a "Thank You" page or updated content.
+                </li>
+              </ol>
+              <p class="mt-2 text-sm italic">
+                **Mini-Activity:** Think about the last time you signed up for
+                an online service. What kind of information did the form ask
+                for? What happened after you clicked "Submit"?
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The `&lt;form&gt;` Element: The Container
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The `&lt;form&gt;` element is the essential container for all
+                your form controls and content. All inputs, buttons, and text
+                related to a single submission should be inside it. You cannot
+                nest one `&lt;form&gt;` inside another.
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  `action` attribute: This tells the browser *where* to send the
+                  form data (the URL of the server-side script).
+                </li>
+                <li>
+                  `method` attribute: This defines *how* the data is sent.
+                  <ul class="list-circle list-inside ml-4">
+                    <li>
+                      `GET`: Data is appended to the URL (visible in the
+                      browser's address bar). Best for simple searches or data
+                      that isn't sensitive. Data size is limited.
+                    </li>
+                    <li>
+                      `POST`: Data is sent in the body of the HTTP request (not
+                      visible in the URL). Best for sensitive information
+                      (passwords, personal details) and large amounts of data
+                      (like file uploads). This is the most common method for
+                      forms.
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;form action="/submit-contact-form.php" method="POST"&gt;
+    &lt;!-- Your form inputs and buttons go here --&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Common Form Controls & Attributes
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>These are the building blocks users interact with:</p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong
+                    >`&lt;input type="text"&gt;` (Single-line Text
+                    Field):</strong
+                  >
+                  For short text input.
+                  <ul class="list-circle list-inside ml-4">
+                    <li>
+                      `name`: (Crucial!) The name of the data piece (e.g.,
+                      `username`).
+                    </li>
+                    <li>
+                      `value`: Default text that appears in the field when the
+                      page loads.
+                    </li>
+                    <li>
+                      `placeholder`: Light gray hint text that disappears when
+                      the user types (e.g., "Enter your name").
+                    </li>
+                    <li>`maxlength`, `minlength`: Set character limits.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>`&lt;textarea&gt;` (Multi-line Text Area):</strong>
+                  For longer text input (comments, messages).
+                  <ul class="list-circle list-inside ml-4">
+                    <li>
+                      `rows`, `cols`: Define the visible height (in lines) and
+                      width (in characters).
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>`disabled` attribute:</strong> Makes a control
+                  unusable and grayed out. Its value is *not* submitted with the
+                  form.
+                </li>
+                <li>
+                  <strong>`readonly` attribute:</strong> Makes a control
+                  uneditable by the user, but its value *is* submitted with the
+                  form.
+                </li>
+              </ul>
+              <pre><code class="language-html">&lt;input type="text" name="fullName" placeholder="Your Full Name" maxlength="50"&gt;
+&lt;textarea name="feedback" rows="5" cols="50" placeholder="Your comments..."&gt;&lt;/textarea&gt;
+&lt;input type="text" value="Default Text" readonly&gt;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="embedded-media" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Embedded Media: Beyond Static Images
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            HTML allows you to embed rich media and external resources directly
+            into your webpages, bringing dynamic content like videos, audio, and
+            interactive maps to your users.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              `&lt;iframe&gt;` (Embedding Other Webpages)
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The `&lt;iframe&gt;` (inline frame) element allows you to embed
+                another HTML document or web resource (like a YouTube video,
+                Google Map, or even an ad) directly within your current page. It
+                creates a "window within a window."
+              </p>
+              <pre><code class="language-html">&lt;!-- Example: Embedding a YouTube video --&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;!-- Example: Embedding a Google Map --&gt;
+&lt;iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.254391696239!2d-122.4194156846813!3d37.77492977975924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808e8d8d8d8d%3A0x8085808e8d8d8d8d!2sGolden+Gate+Bridge!5e0!3m2!1sen!2sus!4v1678901234567!5m2!1sen!2sus"
+    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"&gt;&lt;/iframe&gt;</code></pre>
+              <p class="mt-2">
+                The `src` attribute specifies the URL of the content to embed.
+                Attributes like `width`, `height`, and `frameborder` control its
+                appearance. The `sandbox` attribute is important for security,
+                restricting what the embedded content can do.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              `&lt;object&gt;` (Generic Embedder - Historical Context)
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The `&lt;object&gt;` element is a generic way to embed external
+                resources. Historically, it was used for content requiring
+                browser plugins like Flash or Java Applets. While it's still
+                part of HTML, its use has significantly decreased as modern
+                browsers support media natively.
+              </p>
+              <pre><code class="language-html">&lt;!-- Example (less common today, but shows usage) --&gt;
+&lt;object data="your-flash-animation.swf" type="application/x-shockwave-flash" width="300" height="200"&gt;
+    &lt;!-- Fallback content if plugin not available --&gt;
+    &lt;p&gt;Your browser does not support Flash.&lt;/p&gt;
+&lt;/object&gt;</code></pre>
+              <p class="mt-2">
+                For most modern media (video, audio, SVG), native HTML5 elements
+                or `&lt;iframe&gt;` are preferred over `&lt;object&gt;`.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Native Video & Audio Players
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                HTML5 introduced dedicated elements for embedding video and
+                audio directly, without needing third-party plugins. This is the
+                standard way to include multimedia today.
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>`&lt;video&gt;` element:</strong> For embedding video.
+                  <pre><code class="language-html">&lt;video controls width="640" height="360" poster="video-thumbnail.jpg"&gt;
+    &lt;source src="my-video.mp4" type="video/mp4"&gt;
+    &lt;source src="my-video.webm" type="video/webm"&gt;
+    &lt;p&gt;Your browser does not support the video tag.&lt;/p&gt;
+&lt;/video&gt;</code></pre>
+                  <ul class="list-circle list-inside ml-4 mt-1">
+                    <li>
+                      `controls`: Displays playback controls (play/pause,
+                      volume, fullscreen).
+                    </li>
+                    <li>
+                      `autoplay`: Starts playing automatically (use *very*
+                      sparingly, it can be annoying!).
+                    </li>
+                    <li>`loop`: Repeats the video.</li>
+                    <li>`muted`: Disables audio by default.</li>
+                    <li>
+                      `poster`: An image to display before the video plays.
+                    </li>
+                    <li>
+                      `&lt;source&gt;`: Provides multiple video formats (`.mp4`
+                      with H.264, `.webm` with VP8/VP9) for wider browser
+                      compatibility.
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>`&lt;audio&gt;` element:</strong> For embedding audio.
+                  <pre><code class="language-html">&lt;audio controls&gt;
+    &lt;source src="my-audio.mp3" type="audio/mpeg"&gt;
+    &lt;source src="my-audio.ogg" type="audio/ogg"&gt;
+    &lt;p&gt;Your browser does not support the audio tag.&lt;/p&gt;
+&lt;/audio&gt;</code></pre>
+                  <ul class="list-circle list-inside ml-4 mt-1">
+                    <li>`controls`: Displays playback controls.</li>
+                    <li>
+                      Similar `autoplay`, `loop`, `muted` attributes apply.
+                    </li>
+                    <li>
+                      `&lt;source&gt;`: Provides multiple audio formats (`.mp3`,
+                      `.ogg`, `.wav`) for compatibility.
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <p class="mt-2 text-sm italic">
+                **Mini-Activity:** Find a short, public domain video online. How
+                would you embed it on a page with controls, a poster image, and
+                two different source formats?
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              `&lt;canvas&gt;` (Dynamic Drawing Area)
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The `&lt;canvas&gt;` element creates a blank, rectangular area
+                on your webpage where you can draw graphics, animations, or even
+                simple games entirely using **JavaScript**. It's a pixel-based
+                drawing surface.
+              </p>
+              <pre><code class="language-html">&lt;canvas id="myDrawingCanvas" width="300" height="150" style="border:2px solid #3e5c76; background-color: #f0ebd8;"&gt;
+    Your browser does not support the canvas tag.
+&lt;/canvas&gt;
+&lt;script&gt;
+    // This JavaScript draws a simple circle on the canvas
+    const canvas = document.getElementById('myDrawingCanvas');
+    const ctx = canvas.getContext('2d'); // Get the 2D drawing context
+
+    ctx.beginPath(); // Start drawing path
+    ctx.arc(150, 75, 50, 0, 2 * Math.PI); // Draw a circle: (x, y, radius, startAngle, endAngle)
+    ctx.fillStyle = '#748cab'; // Set fill color
+    ctx.fill(); // Fill the circle
+
+    ctx.lineWidth = 3; // Set line width
+    ctx.strokeStyle = '#1d2d44'; // Set stroke color
+    ctx.stroke(); // Draw the circle's outline
+&lt;/script&gt;</code></pre>
+              <p class="mt-2">
+                All drawing operations on a `&lt;canvas&gt;` are performed using
+                JavaScript commands, making it incredibly powerful for creating
+                dynamic and interactive visual experiences directly in the
+                browser.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="bg-[#0d1321] text-white text-center p-6 mt-auto">
+      <p>&copy; ----Prepared by Priti. Keep practicing!</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const contentSections = document.querySelectorAll(".content-section");
+        const accordionHeaders = document.querySelectorAll(".accordion-header");
+
+        // Function to show a section and hide others
+        function showSection(sectionId) {
+          contentSections.forEach((section) => {
+            if (section.id === sectionId) {
+              section.classList.add("active");
+            } else {
+              section.classList.remove("active");
+            }
+          });
+        }
+
+        // Function to update active nav link
+        function updateActiveNavLink(activeLink) {
+          navLinks.forEach((link) => {
+            if (link === activeLink) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        }
+
+        // Handle hash on page load
+        if (window.location.hash) {
+          const sectionIdFromHash = window.location.hash.substring(1);
+          showSection(sectionIdFromHash);
+          const activeNavLink = document.querySelector(
+            `.nav-link[href="${window.location.hash}"]`
+          );
+          if (activeNavLink) {
+            updateActiveNavLink(activeNavLink);
+          }
+        } else {
+          // Show intro section by default if no hash
+          showSection("week2-intro"); // Default to the intro section of Week 2
+          const introNavLink = document.querySelector(
+            '.nav-link[href="#week2-intro"]'
+          );
+          if (introNavLink) {
+            updateActiveNavLink(introNavLink);
+          }
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            // event.preventDefault(); // Prevent default anchor behavior if not using hash for scrolling
+            const targetId = this.getAttribute("href").substring(1); // Get target ID from href (e.g., #section-vars -> section-vars)
+            showSection(targetId);
+            updateActiveNavLink(this);
+
+            // Scroll to the section if it's not just show/hide
+            // const targetElement = document.getElementById(targetId);
+            // if (targetElement) {
+            //    targetElement.scrollIntoView({ behavior: 'smooth' });
+            // }
+          });
+        });
+
+        accordionHeaders.forEach((header) => {
+          header.addEventListener("click", function () {
+            this.classList.toggle("active");
+            const content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+              content.style.maxHeight = null;
+              content.classList.add("hidden");
+            } else {
+              content.classList.remove("hidden");
+              content.style.maxHeight = content.scrollHeight + "px";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Media Design: Web Fundamentals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Chosen Palette: Coolors.co (0d1321-1d2d44-3e5c76-748cab-f0ebd8) */
+      /* Application Structure Plan: Multi-page application with index.html as the entry point.
+           Overall: A multi-page application with a consistent top navigation bar for "Weeks." Each "Week" page will have its own internal structure (sidebar for main topics, main content area with accordions for sub-topics).
+           Rationale: This structure provides a clear progression through the course material ("Week 1" to "Week 4"). The top navigation offers quick switching between weeks (easy exploration). The landing page (index.html) provides an inviting overview and direct links to each week, enhancing user understanding and ease of navigation from the start. */
+      /* Visualization & Content Choices:
+           index.html: Introduction and overview of the course.
+           Week 1: Focus on foundational text explanations for HTML/CSS, semantic elements, selectors, and layout concepts. Code examples will be crucial.
+           Week 2: Covers more specific HTML elements (text, lists, tables, forms, media), web mechanics, and big concepts.
+           Week 3: Focuses on JavaScript basics, DOM, and web interactivity.
+           Week 4: Will cover effective website creation (once content is available).
+           Justification: Text is best for explanations; code blocks for syntax; interactive elements for active recall and engagement.
+           Library/Method: Vanilla JS for interactions, Tailwind for styling. */
+      /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+
+      body {
+        background: linear-gradient(
+          to bottom right,
+          #f0ebd8,
+          #748cab
+        ); /* Light cream to light blue/gray gradient */
+        font-family: sans-serif;
+        min-height: 100vh; /* Ensure gradient covers full viewport height */
+        display: flex;
+        flex-direction: column;
+        color: #0d1321; /* Darkest color for main text */
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .week-card {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        border: 1px solid #e0e0e0; /* Subtle border for cards */
+      }
+      .week-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+      }
+      .week-card h3 {
+        color: #1d2d44; /* Dark blue from palette */
+        font-weight: bold;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .week-card p {
+        color: #3e5c76; /* Medium blue/gray from palette */
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+      }
+      .week-card a {
+        display: inline-block;
+        background-color: #3e5c76; /* Medium blue/gray for button */
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.375rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.2s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .week-card a:hover {
+        background-color: #1d2d44; /* Darker blue on hover */
+      }
+
+      /* Navigation bar styling */
+      .top-nav {
+        background-color: #0d1321; /* Darkest color for nav */
+        color: #748cab; /* Lighter blue/gray for initial text */
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+      }
+      .top-nav ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 1rem;
+      }
+      .top-nav a {
+        color: #748cab; /* Lighter blue/gray for initial text */
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+      }
+      .top-nav a:hover {
+        background-color: #3e5c76; /* Medium blue/gray on hover */
+        color: white;
+      }
+      .top-nav a.active {
+        background-color: #3e5c76; /* Medium blue/gray for active */
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <header class="bg-[#0d1321] text-white p-6 shadow-md">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+          Digital Media Design: Web Fundamentals
+        </h1>
+        <nav class="top-nav">
+          <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="week1.html">Week 1</a></li>
+            <li><a href="week2.html">Week 2</a></li>
+            <li><a href="week3.html">Week 3</a></li>
+            <li><a href="week4.html">Week 4</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-grow container mx-auto mt-8 p-4 md:p-0">
+      <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+        <h2
+          class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+        >
+          Welcome to Your Web Design Journey!
+        </h2>
+        <p class="text-slate-700 leading-relaxed mb-6">
+          Embark on an exciting journey into the world of web design and
+          development. This interactive guide is structured into weekly modules,
+          designed to take you from foundational concepts to building dynamic
+          web applications. Each week builds upon the last, providing you with
+          practical skills and a deeper understanding of how the web works.
+        </p>
+        <p class="text-slate-700 leading-relaxed mb-8">
+          Use the navigation below or the links in the header to explore the
+          content for each week. Let's start building amazing web experiences!
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="week-card">
+            <h3>Week 1: HTML & CSS Basics</h3>
+            <p>
+              Dive into the absolute basics of how webpages are structured and
+              styled. Learn about HTML's role as the skeleton and CSS's role as
+              the skin, along with semantic elements and modern layout
+              techniques.
+            </p>
+            <a href="week1.html">Start Week 1</a>
+          </div>
+          <div class="week-card">
+            <h3>Week 2: HTML Elements & Web Concepts</h3>
+            <p>
+              Explore essential HTML elements for text, lists, tables, forms,
+              and embedded media. Understand how the web works, fundamental
+              design concepts, and key accessibility principles.
+            </p>
+            <a href="week2.html">Start Week 2</a>
+          </div>
+          <div class="week-card">
+            <h3>Week 3: JavaScript & Interactivity</h3>
+            <p>
+              Unleash the power of JavaScript to bring your webpages to life!
+              Learn about variables, data types, DOM manipulation, and create
+              interactive elements that respond to user actions.
+            </p>
+            <a href="week3.html">Start Week 3</a>
+          </div>
+          <div class="week-card">
+            <h3>Week 4: Effective Website Creation</h3>
+            <p>
+              Put your skills to the test! Learn about planning a website,
+              information architecture, design principles, and best practices
+              for creating a compelling and user-friendly web presence.
+            </p>
+            <a href="week4.html">Start Week 4</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-[#0d1321] text-white text-center p-6 mt-auto">
+      <p>&copy; ----Prepared by Priti. Keep practicing!</p>
+    </footer>
+  </body>
+</html>

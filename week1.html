@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 1: Foundations of Web Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Chosen Palette: Coolors.co (0d1321-1d2d44-3e5c76-748cab-f0ebd8) */
+      /* Application Structure Plan: Multi-page application with index.html as the entry point.
+           Overall: A multi-page application with a consistent top navigation bar for "Weeks." Each "Week" page will have its own internal structure (sidebar for main topics, main content area with accordions for sub-topics).
+           Rationale: This structure provides a clear progression through the course material ("Week 1" to "Week 4"). The top navigation offers quick switching between weeks (easy exploration). Within each week, the sidebar navigation allows users to jump to major topics, and accordions manage information density, preventing overwhelming scrolls and promoting focused learning (user understanding). This balances broad navigation with detailed content exploration. */
+      /* Visualization & Content Choices:
+           Week 1: Focus on foundational text explanations for HTML/CSS, semantic elements, selectors, and layout concepts. Code examples will be crucial.
+           Week 2: Covers more specific HTML elements (text, lists, tables, forms, media), web mechanics, and big concepts.
+           Week 3: Focuses on JavaScript basics, DOM, and web interactivity.
+           Week 4: Will cover effective website creation.
+           Justification: Text is best for explanations; code blocks for syntax; interactive elements for active recall and engagement.
+           Library/Method: Vanilla JS for interactions, Tailwind for styling. */
+      /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+
+      body {
+        background: linear-gradient(to bottom right, #f0ebd8, #748cab);
+        font-family: sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        color: #0d1321;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .accordion-header::after {
+        content: "\25BC";
+        float: right;
+        transition: transform 0.3s ease;
+      }
+
+      .accordion-header.active::after {
+        transform: rotate(180deg);
+      }
+
+      .nav-link {
+        color: #748cab; /* Lighter blue/gray for better visibility on dark sidebar */
+      }
+
+      .nav-link.active {
+        background-color: #3e5c76;
+        color: white;
+      }
+
+      .nav-link:hover {
+        background-color: #3e5c76;
+        color: white;
+      }
+
+      .content-section {
+        display: none;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #ebebe0;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        overflow-x: auto;
+      }
+
+      code {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+
+  <body class="font-sans">
+    <header class="bg-[#0d1321] text-white p-6 shadow-md">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl font-bold">
+          Digital Media Design: Web Fundamentals
+        </h1>
+        <nav>
+          <ul class="flex space-x-4">
+            <li>
+              <a
+                href="index.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="week1.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 1</a
+              >
+            </li>
+            <li>
+              <a
+                href="week2.html"
+                class="text-white hover:text-[#748cab] font-semibold nav-link active"
+                >Week 2</a
+              >
+            </li>
+            <li>
+              <a
+                href="week3.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 3</a
+              >
+            </li>
+            <li>
+              <a
+                href="week4.html"
+                class="text-white hover:text-[#748cab] font-semibold"
+                >Week 4</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row container mx-auto mt-8 p-4 md:p-0">
+      <aside
+        id="sidebar"
+        class="w-full md:w-1/4 bg-[#1d2d44] p-6 rounded-lg shadow-md md:mr-8 mb-8 md:mb-0 md:sticky md:top-8 self-start"
+      >
+        <h2 class="text-xl font-semibold text-[#f0ebd8] mb-4">Week 1 Topics</h2>
+        <nav>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="#what-is-dmd"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >What is Digital Media Design?</a
+              >
+            </li>
+            <li>
+              <a
+                href="#html-basics"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >HTML Basics</a
+              >
+            </li>
+            <li>
+              <a
+                href="#css-basics"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >CSS Basics</a
+              >
+            </li>
+            <li>
+              <a
+                href="#browser-view"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >How Browsers See Them</a
+              >
+            </li>
+            <li>
+              <a
+                href="#week1-summary"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Week 1 Summary</a
+              >
+            </li>
+            <li>
+              <a
+                href="#resources"
+                class="nav-link block p-3 rounded-md hover:bg-[#3e5c76] transition-colors duration-200"
+                >Resources</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main
+        id="main-content"
+        class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-md"
+      >
+        <section id="what-is-dmd" class="content-section active mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            What is Digital Media Design?
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Digital Media Design is a dynamic field that combines creativity and
+            technology to communicate ideas and information through digital
+            channels. It's about crafting engaging experiences that captivate
+            audiences in the digital world.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Types of Digital Media Design
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Digital media design encompasses a wide range of
+                specializations:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>Web Design:</strong> Creating websites and web
+                  applications.
+                </li>
+                <li>
+                  <strong>UI/UX Design:</strong> Focusing on user interface and
+                  user experience.
+                </li>
+                <li>
+                  <strong>Graphic Design:</strong> Creating visual assets for
+                  digital platforms.
+                </li>
+                <li>
+                  <strong>Animation:</strong> Creating moving images and visual
+                  effects.
+                </li>
+                <li>
+                  <strong>Video Production:</strong> Filming, editing, and
+                  producing video content.
+                </li>
+                <li>
+                  <strong>Interactive Media:</strong> Designing interactive
+                  experiences like games or simulations.
+                </li>
+              </ul>
+              <p class="mt-2">
+                Each type plays a vital role in shaping how we interact with
+                digital content.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              How Digital Media is Used
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Digital media design is used across many industries and
+                contexts:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>Marketing & Advertising:</strong> Creating campaigns,
+                  websites, and social media content.
+                </li>
+                <li>
+                  <strong>Education:</strong> Designing online courses,
+                  interactive learning tools.
+                </li>
+                <li>
+                  <strong>Entertainment:</strong> Developing video games,
+                  movies, and streaming content.
+                </li>
+                <li>
+                  <strong>Information & Communication:</strong> Building news
+                  websites, social platforms, and communication apps.
+                </li>
+              </ul>
+              <p class="mt-2">
+                Digital media is all around us, shaping how we communicate,
+                learn, and experience the world.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="html-basics" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            HTML Basics: Structuring Your Web Content
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            HTML (HyperText Markup Language) is the foundation of every webpage.
+            It provides the structure and meaning to your content, like
+            headings, paragraphs, lists, and images.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              HTML Elements: The Building Blocks
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                HTML elements are the core components of a webpage. They consist
+                of:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>**Opening tag:** Like `&lt;p&gt;` to start a paragraph.</li>
+                <li>
+                  **Content:** The actual text, images, or other elements.
+                </li>
+                <li>**Closing tag:** Like `&lt;/p&gt;` to end a paragraph.</li>
+              </ul>
+              <p class="mt-2">
+                Browsers interpret these tags to display the content correctly.
+                For example, `&lt;h1&gt;` tells the browser "This is the main
+                heading."
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Common HTML Elements
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  `&lt;html&gt;`: The root element, containing the entire HTML
+                  document.
+                </li>
+                <li>
+                  `&lt;head&gt;`: Contains information about the page (like its
+                  title, which appears in the browser tab).
+                </li>
+                <li>`&lt;body&gt;`: Holds the visible content of the page.</li>
+                <li>
+                  `&lt;h1&gt;` to `&lt;h6&gt;`: Headings of different sizes.
+                </li>
+                <li>`&lt;p&gt;`: Paragraphs of text.</li>
+                <li>
+                  `&lt;a href="..."&gt;`: Links to other pages or sections.
+                </li>
+                <li>`&lt;img src="..."&gt;`: Images.</li>
+                <li>
+                  `&lt;div&gt;`: A generic container for grouping content.
+                </li>
+                <li>
+                  `&lt;span&gt;`: A generic inline container for styling parts
+                  of text.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="css-basics" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            CSS Basics: Styling Your Webpages
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            CSS (Cascading Style Sheets) controls the visual presentation of
+            your HTML content. It's how you define colors, fonts, layout, and
+            responsiveness.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              CSS Rules: Selectors & Properties
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>CSS rules have a simple structure:</p>
+              <pre><code class="language-css">selector {
+  property: value;
+}</code></pre>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  **Selector:** Targets the HTML element(s) you want to style
+                  (e.g., `p` for paragraphs, `h1` for headings).
+                </li>
+                <li>
+                  **Property:** The aspect of the element you want to change
+                  (e.g., `color`, `font-size`).
+                </li>
+                <li>
+                  **Value:** The setting for that property (e.g., `red`,
+                  `16px`).
+                </li>
+              </ul>
+              <p class="mt-2">
+                CSS properties are applied to HTML elements based on their
+                selectors.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Common CSS Properties
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>`color`: Text color.</li>
+                <li>`background-color`: Background color of an element.</li>
+                <li>
+                  `font-family`: Font style (e.g., Arial, Times New Roman).
+                </li>
+                <li>`font-size`: Text size.</li>
+                <li>`font-weight`: Boldness of text.</li>
+                <li>`margin`: Space outside an element.</li>
+                <li>`padding`: Space inside an element.</li>
+                <li>
+                  `display`: How an element is displayed (e.g., `block`,
+                  `inline`, `flex`, `grid`).
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="browser-view" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            How Does Browser See Them?
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            Browsers have a specific way of interpreting and displaying HTML and
+            CSS. Let's explore the key concepts:
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The Rendering Engine
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The browser uses a **rendering engine** to convert your HTML and
+                CSS code into the visual webpage you see. Different browsers use
+                different engines (e.g., Blink, Gecko, WebKit), which can
+                sometimes lead to slight variations in how pages are displayed.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The Document Object Model (DOM)
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                The DOM is a tree-like representation of your HTML structure.
+                The browser uses the DOM to understand the relationships between
+                different elements and how to style them. JavaScript also uses
+                the DOM to manipulate webpage content.
+              </p>
+            </div>
+          </div>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              The Box Model
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <p>
+                Every HTML element is treated as a rectangular box. The box
+                model describes the different layers that make up this box:
+              </p>
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  **Content:** The actual text, image, or other media within the
+                  element.
+                </li>
+                <li>
+                  **Padding:** Space *inside* the element, between the content
+                  and the border.
+                </li>
+                <li>**Border:** A line surrounding the element.</li>
+                <li>
+                  **Margin:** Space *outside* the element, pushing it away from
+                  other elements.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="week1-summary" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Week 1 Summary
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            This week, we've laid the groundwork for web design by exploring the
+            essential technologies of HTML and CSS. You've learned how HTML
+            provides structure and meaning, and how CSS controls the visual
+            presentation.
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Key Concepts
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>HTML is for structure and content.</li>
+                <li>CSS is for styling and layout.</li>
+                <li>Semantic HTML makes your content meaningful.</li>
+                <li>CSS selectors target specific HTML elements.</li>
+                <li>CSS Grid is a powerful layout tool.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="resources" class="content-section mb-12">
+          <h2
+            class="text-3xl font-semibold text-[#3e5c76] mb-6 border-b-2 border-[#748cab] pb-2"
+          >
+            Resources
+          </h2>
+          <p class="text-slate-700 leading-relaxed mb-4">
+            To further your understanding of HTML and CSS, explore these helpful
+            resources:
+          </p>
+          <div class="accordion-item bg-[#f0ebd8] p-4 rounded-md shadow mb-3">
+            <button
+              class="accordion-header w-full text-left text-lg font-medium text-[#3e5c76] focus:outline-none"
+            >
+              Online Resources
+            </button>
+            <div
+              class="accordion-content hidden mt-3 text-slate-700 leading-relaxed"
+            >
+              <ul class="list-disc list-inside ml-4 space-y-2">
+                <li>
+                  <strong>W3Schools:</strong> A comprehensive and
+                  beginner-friendly website with tutorials and references.
+                  <ul class="list-circle list-inside ml-4">
+                    <li>
+                      <a
+                        href="https://www.w3schools.com/html/default.asp"
+                        class="text-[#3e5c76] hover:underline"
+                        target="_blank"
+                        >HTML Tutorial</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.w3schools.com/css/default.asp"
+                        class="text-[#3e5c76] hover:underline"
+                        target="_blank"
+                        >CSS Tutorial</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>MDN Web Docs:</strong> Mozilla's documentation, a
+                  highly reliable source for web technologies.
+                  <ul class="list-circle list-inside ml-4">
+                    <li>
+                      <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/HTML"
+                        class="text-[#3e5c76] hover:underline"
+                        target="_blank"
+                        >HTML Reference</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/CSS"
+                        class="text-[#3e5c76] hover:underline"
+                        target="_blank"
+                        >CSS Reference</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>CSS Tricks:</strong> A website with in-depth articles
+                  and tutorials on CSS and modern web development.
+                  <ul class="list-circle list-inside ml-4">
+                    <li>
+                      <a
+                        href="https://css-tricks.com/"
+                        class="text-[#3e5c76] hover:underline"
+                        target="_blank"
+                        >CSS-Tricks</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="bg-[#0d1321] text-white text-center p-6 mt-auto">
+      <p>&copy; ----Prepared by Priti. Keep practicing!</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const contentSections = document.querySelectorAll(".content-section");
+        const accordionHeaders = document.querySelectorAll(".accordion-header");
+
+        // Function to show a section and hide others
+        function showSection(sectionId) {
+          contentSections.forEach((section) => {
+            if (section.id === sectionId) {
+              section.classList.add("active");
+            } else {
+              section.classList.remove("active");
+            }
+          });
+        }
+
+        // Function to update active nav link
+        function updateActiveNavLink(activeLink) {
+          navLinks.forEach((link) => {
+            if (link === activeLink) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        }
+
+        // Handle hash on page load
+        if (window.location.hash) {
+          const sectionIdFromHash = window.location.hash.substring(1);
+          showSection(sectionIdFromHash);
+          const activeNavLink = document.querySelector(
+            `.nav-link[href="${window.location.hash}"]`
+          );
+          if (activeNavLink) {
+            updateActiveNavLink(activeNavLink);
+          }
+        } else {
+          // Show intro section by default if no hash
+          showSection("what-is-dmd"); // Default to the first section of Week 1
+          const introNavLink = document.querySelector(
+            '.nav-link[href="#what-is-dmd"]'
+          );
+          if (introNavLink) {
+            updateActiveNavLink(introNavLink);
+          }
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            // event.preventDefault(); // Prevent default anchor behavior if not using hash for scrolling
+            const targetId = this.getAttribute("href").substring(1); // Get target ID from href (e.g., #section-vars -> section-vars)
+            showSection(targetId);
+            updateActiveNavLink(this);
+
+            // Scroll to the section if it's not just show/hide
+            // const targetElement = document.getElementById(targetId);
+            // if (targetElement) {
+            //    targetElement.scrollIntoView({ behavior: 'smooth' });
+            // }
+          });
+        });
+
+        accordionHeaders.forEach((header) => {
+          header.addEventListener("click", function () {
+            this.classList.toggle("active");
+            const content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+              content.style.maxHeight = null;
+              content.classList.add("hidden");
+            } else {
+              content.classList.remove("hidden");
+              content.style.maxHeight = content.scrollHeight + "px";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
