@@ -430,44 +430,89 @@
         </section>
       </main>
     </div>
-    <footer class="bg-[#0d1321] text-white text-center p-4 mt-auto">
-      <p>© Prepared by Priti. Keep practicing!</p>
-    </footer>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const links = document.querySelectorAll(".nav-link");
-        const sections = document.querySelectorAll(".content-section");
-        const acc = document.querySelectorAll(".accordion-header");
+    <footer class="bg-[#0d1321] text-white text-center p-6 mt-auto">
+      <p>&copy; ----Prepared by Priti. Keep practicing!</p>
+  </footer>
 
-        // helper: show selected section only
-        function show(id) {
-          sections.forEach((s) => {
-            if (s.id === id) s.classList.add("active");
-            else s.classList.remove("active");
-          });
-        }
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const navLinks = document.querySelectorAll('.nav-link');
+          const contentSections = document.querySelectorAll('.content-section');
+          const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-        // nav click
-        links.forEach((link) => {
-          link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const id = link.getAttribute("href").substring(1);
-            show(id);
-            links.forEach((a) => a.classList.remove("active"));
-            link.classList.add("active");
-          });
-        });
+          // Function to show a section and hide others
+          function showSection(sectionId) {
+              contentSections.forEach(section => {
+                  if (section.id === sectionId) {
+                      section.classList.add('active');
+                  } else {
+                      section.classList.remove('active');
+                  }
+              });
+          }
 
-        // accordion toggle
-        acc.forEach((header) => {
-          header.addEventListener("click", () => {
-            header.classList.toggle("active");
-            const content = header.nextElementSibling;
-            content.style.display =
-              content.style.display === "block" ? "none" : "block";
+          // Function to update active nav link
+          function updateActiveNavLink(activeLink) {
+              navLinks.forEach(link => {
+                  if (link === activeLink) {
+                      link.classList.add('active');
+                  } else {
+                      link.classList.remove('active');
+                  }
+              });
+          }
+          
+          // Handle hash on page load
+          if (window.location.hash) {
+              const sectionIdFromHash = window.location.hash.substring(1);
+              showSection(sectionIdFromHash);
+              const activeNavLink = document.querySelector(`.nav-link[href="${window.location.hash}"]`);
+              if (activeNavLink) {
+                  updateActiveNavLink(activeNavLink);
+              }
+          } else {
+               // Show intro section by default if no hash
+              showSection('week3-intro'); // Default to the intro section of Week 3
+              const introNavLink = document.querySelector('.nav-link[href="#week3-intro"]');
+              if (introNavLink) {
+                  updateActiveNavLink(introNavLink);
+              }
+          }
+
+
+          navLinks.forEach(link => {
+              link.addEventListener('click', function (event) {
+                  // event.preventDefault(); // Prevent default anchor behavior if not using hash for scrolling
+                  const targetId = this.getAttribute('href').substring(1); // Get target ID from href (e.g., #section-vars -> section-vars)
+                  showSection(targetId);
+                  updateActiveNavLink(this);
+                  
+                  // Scroll to the section if it's not just show/hide
+                  // const targetElement = document.getElementById(targetId);
+                  // if (targetElement) {
+                  //    targetElement.scrollIntoView({ behavior: 'smooth' });
+                  // }
+              });
           });
-        });
+
+          accordionHeaders.forEach(header => {
+              header.addEventListener('click', function () {
+                  this.classList.toggle('active');
+                  const content = this.nextElementSibling;
+                  if (content.style.maxHeight) {
+                      content.style.maxHeight = null;
+                      content.classList.add('hidden');
+                  } else {
+                      content.classList.remove('hidden');
+                      content.style.maxHeight = content.scrollHeight + "px";
+                  }
+              });
+          });
       });
-    </script>
+  </script>
+
+</body>
+</html>
+
   </body>
 </html>
