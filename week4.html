@@ -48,11 +48,7 @@
         margin-bottom: 1rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
-      .feature-title {
-        font-semibold;
-        color: #26a69a;
-        margin-bottom: 0.5rem;
-      }
+      
       .feature-list {
         list-style-type: disc;
         margin-left: 1.5rem;
@@ -65,11 +61,7 @@
         margin-bottom: 1rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
-      .developer-title {
-        font-semibold;
-        color: #ff7043;
-        margin-bottom: 0.5rem;
-      }
+      
       .developer-list {
         list-style-type: disc;
         margin-left: 1.5rem;
@@ -435,81 +427,51 @@
   </footer>
 
   <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          const navLinks = document.querySelectorAll('.nav-link');
-          const contentSections = document.querySelectorAll('.content-section');
-          const accordionHeaders = document.querySelectorAll('.accordion-header');
-          show('intro');
-          document.querySelector('.nav-link[href="#intro"]').classList.add('active');
-          // Function to show a section and hide others
-          function showSection(sectionId) {
-              contentSections.forEach(section => {
-                  if (section.id === sectionId) {
-                      section.classList.add('active');
-                  } else {
-                      section.classList.remove('active');
-                  }
-              });
-          }
+    document.addEventListener('DOMContentLoaded', () => {
+      const navLinks = document.querySelectorAll('.nav-link');
+      const contentSections = document.querySelectorAll('.content-section');
+      const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-          // Function to update active nav link
-          function updateActiveNavLink(activeLink) {
-              navLinks.forEach(link => {
-                  if (link === activeLink) {
-                      link.classList.add('active');
-                  } else {
-                      link.classList.remove('active');
-                  }
-              });
-          }
-          
-          // Handle hash on page load
-          if (window.location.hash) {
-              const sectionIdFromHash = window.location.hash.substring(1);
-              showSection(sectionIdFromHash);
-              const activeNavLink = document.querySelector(`.nav-link[href="${window.location.hash}"]`);
-              if (activeNavLink) {
-                  updateActiveNavLink(activeNavLink);
-              }
-          } else {
-               // Show intro section by default if no hash
-              showSection('week3-intro'); // Default to the intro section of Week 3
-              const introNavLink = document.querySelector('.nav-link[href="#week3-intro"]');
-              if (introNavLink) {
-                  updateActiveNavLink(introNavLink);
-              }
-          }
+      // helper: show & hide sections
+      function showSection(id){
+        contentSections.forEach(sec => sec.id === id ? sec.classList.add('active') : sec.classList.remove('active'));
+      }
+      // helper: highlight sidebar link
+      function setActive(linkEl){
+        navLinks.forEach(l => l.classList.remove('active'));
+        if(linkEl) linkEl.classList.add('active');
+      }
 
+      // ------- default: Introduction -------
+      showSection('intro');
+      setActive(document.querySelector('.nav-link[href="#intro"]'));
 
-          navLinks.forEach(link => {
-              link.addEventListener('click', function (event) {
-                  // event.preventDefault(); // Prevent default anchor behavior if not using hash for scrolling
-                  const targetId = this.getAttribute('href').substring(1); // Get target ID from href (e.g., #section-vars -> section-vars)
-                  showSection(targetId);
-                  updateActiveNavLink(this);
-                  
-                  // Scroll to the section if it's not just show/hide
-                  // const targetElement = document.getElementById(targetId);
-                  // if (targetElement) {
-                  //    targetElement.scrollIntoView({ behavior: 'smooth' });
-                  // }
-              });
-          });
+      // ------- support hash deep‑links on load -------
+      if(window.location.hash){
+        const hashId = window.location.hash.substring(1);
+        const target = document.getElementById(hashId);
+        if(target){
+          showSection(hashId);
+          setActive(document.querySelector(`.nav-link[href="${window.location.hash}"]`));
+        }
+      }
 
-          accordionHeaders.forEach(header => {
-              header.addEventListener('click', function () {
-                  this.classList.toggle('active');
-                  const content = this.nextElementSibling;
-                  if (content.style.maxHeight) {
-                      content.style.maxHeight = null;
-                      content.classList.add('hidden');
-                  } else {
-                      content.classList.remove('hidden');
-                      content.style.maxHeight = content.scrollHeight + "px";
-                  }
-              });
-          });
-      });
+      // ------- sidebar clicks -------
+      navLinks.forEach(link => link.addEventListener('click', e => {
+        e.preventDefault();
+        const id = link.getAttribute('href').substring(1);
+        showSection(id);
+        setActive(link);
+        history.replaceState(null,'','#'+id);
+      }));
+
+      // ------- accordions -------
+      accordionHeaders.forEach(h => h.addEventListener('click', () => {
+        h.classList.toggle('active');
+        const panel = h.nextElementSibling;
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+      }));
+    });
   </script>
 
 </body>
