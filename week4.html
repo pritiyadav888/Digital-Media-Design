@@ -439,7 +439,8 @@
           const navLinks = document.querySelectorAll('.nav-link');
           const contentSections = document.querySelectorAll('.content-section');
           const accordionHeaders = document.querySelectorAll('.accordion-header');
-
+          show('intro');
+          document.querySelector('.nav-link[href="#intro"]').classList.add('active');
           // Function to show a section and hide others
           function showSection(sectionId) {
               contentSections.forEach(section => {
